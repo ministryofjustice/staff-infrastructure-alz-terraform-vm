@@ -49,6 +49,7 @@ resource "azurerm_key_vault" "vm_module_tests" {
 
 resource "azurerm_key_vault_key" "vm_module_tests" {
   name         = "diskEncryption"
+  depends_on   = [azurerm_role_assignment.vm_module_tests]
   provider     = azurerm.spoke
   key_vault_id = azurerm_key_vault.vm_module_tests.id
   key_type     = "RSA"
