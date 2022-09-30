@@ -51,6 +51,9 @@ resource "random_password" "alz_win" {
   for_each         = local.vm_specifications
   length           = 16
   special          = true
+  min_numeric      = 1
+  min_special      = 1
+  min_upper        = 1
   override_special = "!#$%&?"
 }
 
