@@ -16,12 +16,12 @@ provider "azurerm" {
 
 data "azurerm_client_config" "vm_module_tests" {}
 
-
 resource "azurerm_resource_group" "vm_module_tests" {
   name     = "rg-alz-vm-test-001"
   location = "UK South"
   provider = azurerm.spoke
 }
+
 resource "azurerm_virtual_network" "vm_module_tests" {
   name                = "vnet-alz-vm-test-001"
   location            = azurerm_resource_group.vm_module_tests.location
@@ -34,7 +34,6 @@ resource "azurerm_virtual_network" "vm_module_tests" {
     address_prefix = "192.168.99.0/24"
   }
 }
-
 
 resource "azurerm_key_vault" "vm_module_tests" {
   name                      = "kv-alz-vm-test-001"
@@ -54,7 +53,6 @@ resource "azurerm_key_vault_key" "vm_module_tests" {
   key_vault_id = azurerm_key_vault.vm_module_tests.id
   key_type     = "RSA"
   key_size     = 2048
-
 
   key_opts = [
     "decrypt",

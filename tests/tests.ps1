@@ -29,7 +29,7 @@ Describe 'ALZ VM Module validation' {
     }
 
     Context 'Windows VM Validation' {
-        It "Automation Account has correct name" { $vmWin.Name | Should -Be "vm-test-win-01" }
+        It "Windows VM exists with correct name" { $vmWin.Name | Should -Be "vm-test-win-01" }
         It "Windows VM has correct IP address" { $winNic.IPConfigurations.PrivateIPAddress | Should -Be "192.168.99.5" }
         It "Windows VM monitoring is enabled" { $vmWin.Tags.prometheusAzureVirtualMachines | Should -Be "tomonitor" }
         It "Windows VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-win-01-password" }

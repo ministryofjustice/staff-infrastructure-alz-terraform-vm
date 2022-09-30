@@ -76,7 +76,7 @@ stages:
             azureSubscription: scVLZ
             scriptType: filepath
             scriptPath: "$(System.DefaultWorkingDirectory)/tests/invoke-pester.ps1"
-            scriptArguments: "-Path $(System.DefaultWorkingDirectory)/"
+            scriptArguments: "-Path $(System.DefaultWorkingDirectory)/tests"
             workingDirectory: $(System.DefaultWorkingDirectory)/tests
             TargetAzurePs: latestVersion
 
