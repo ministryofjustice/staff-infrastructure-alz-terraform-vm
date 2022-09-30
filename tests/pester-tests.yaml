@@ -18,6 +18,7 @@ resources:
       type: github
       name: ministryofjustice/staff-infrastructure-alz-ci-templates
       ref: azdo_templates
+      endpoint: staff-infrastructure-alz-ci-templates
 
 pool:
   vmImage: ubuntu-latest
