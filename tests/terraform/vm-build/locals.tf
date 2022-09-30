@@ -1,0 +1,87 @@
+locals {
+  vm_specifications_win = {
+    vm-test-win-01 = {
+      vm_size            = "Standard_D3_v2"
+      zone               = "1"
+      publisher          = "MicrosoftWindowsServer"
+      offer              = "WindowsServer"
+      sku                = "2016-Datacenter"
+      version            = "latest"
+      admin_user         = "azureuser"
+      patch_class        = "Bronze1"
+      scheduled_shutdown = true
+      monitor            = true
+      backup             = false
+      enable_ade         = true
+
+      network = {
+        nic-mgmt = {
+          vnet                = "vnet-alz-vm-test-001"
+          vnet_resource_group = "rg-alz-vm-test-001"
+          subnet              = "snet-alz-vm-test-001"
+          ip_address          = "192.168.99.5"
+        }
+      }
+
+      data_disks = {
+        data1 = {
+          size          = 20
+          type          = "Standard_LRS"
+          create_option = "Empty"
+        },
+        data2 = {
+          size          = 25
+          type          = "Standard_LRS"
+          create_option = "Empty"
+        }
+      }
+
+      tags = {
+        application = "windows_app"
+        owner       = "alz"
+      }
+    }
+  }
+
+  vm_specifications_linux = {
+    vm-test-nix-01 = {
+      vm_size            = "Standard_D3_v2"
+      zone               = "1"
+      publisher          = "Canonical"
+      offer              = "UbuntuServer"
+      sku                = "16.04-LTS"
+      version            = "latest"
+      admin_user         = "azureuser"
+      scheduled_shutdown = false
+      monitor            = false
+      backup             = false
+
+      network = {
+        nic-mgmt = {
+          vnet                = "vnet-alz-vm-test-001"
+          vnet_resource_group = "rg-alz-vm-test-001"
+          subnet              = "snet-alz-vm-test-001"
+          ip_address          = "192.168.99.6"
+        }
+      }
+
+      data_disks = {
+        data1 = {
+          size          = 20
+          type          = "Standard_LRS"
+          create_option = "Empty"
+        },
+        data2 = {
+          size          = 25
+          type          = "Standard_LRS"
+          create_option = "Empty"
+        }
+      }
+
+      tags = {
+        application = "linux_app"
+        owner       = "alz"
+      }
+    }
+  }
+}
