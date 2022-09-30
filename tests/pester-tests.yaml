@@ -20,6 +20,10 @@ resources:
       ref: azdo_templates
       endpoint: staff-infrastructure-alz-ci-templates
 
+variables:
+- name: applyOnPr
+  value: true
+
 pool:
   vmImage: ubuntu-latest
 
