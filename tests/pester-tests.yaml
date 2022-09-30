@@ -25,7 +25,7 @@ pool:
 
 stages:
 
-  - template: template-terraform-deploy-stage.yml@templates
+  - template: azdo/template-terraform-deploy-stage.yml@templates
     parameters:
       deployFlag: true
       stageName: "deploy_inf"
@@ -42,7 +42,7 @@ stages:
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
 
-  - template: template-terraform-deploy-stage.yml@templates
+  - template: azdo/template-terraform-deploy-stage.yml@templates
     parameters:
       deployFlag: true
       stageName: "deploy_vms"
@@ -80,7 +80,7 @@ stages:
               testResultsFiles: '$(System.DefaultWorkingDirectory)/tests/testResults.xml'
               failTaskOnFailedTests: false
 
-  - template: template-terraform-destroy-stage.yml@templates
+  - template: azdo/template-terraform-destroy-stage.yml@templates
     parameters:
       destroyFlag: true
       stageName: 'destroy_vms'
@@ -98,7 +98,7 @@ stages:
       applyTfChanges: true
       dependsOn: [test]
 
-  - template: template-terraform-destroy-stage.yml@templates
+  - template: azdo/template-terraform-destroy-stage.yml@templates
     parameters:
       destroyFlag: true
       stageName: 'destroy_inf'
