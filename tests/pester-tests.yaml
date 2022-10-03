@@ -17,7 +17,7 @@ resources:
     - repository: templates
       type: github
       name: ministryofjustice/staff-infrastructure-alz-ci-templates
-      ref: azdo_templates
+      ref: refs/head/main
       endpoint: staff-infrastructure-alz-ci-templates
 
 variables:
@@ -79,7 +79,7 @@ stages:
             TargetAzurePs: latestVersion
             Inline: |
               Install-Module -Name Pester -Force -SkipPublisherCheck
-              Invoke-Pester ./tests.ps1
+              Invoke-Pester -CI ./tests.ps1
 
         - task: PublishTestResults@2
           inputs:
