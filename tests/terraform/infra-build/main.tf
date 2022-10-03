@@ -36,14 +36,14 @@ resource "azurerm_virtual_network" "vm_module_tests" {
 }
 
 resource "azurerm_key_vault" "vm_module_tests" {
-  name                      = "kv-alz-vm-test-001"
-  location                  = azurerm_resource_group.vm_module_tests.location
-  resource_group_name       = azurerm_resource_group.vm_module_tests.name
-  tenant_id                 = data.azurerm_client_config.vm_module_tests.tenant_id
-  enabled_for_disk_encryption     = true
-  enable_rbac_authorization = true
-  sku_name                  = "standard"
-  provider                  = azurerm.spoke
+  name                        = "kv-alz-vm-test-001"
+  location                    = azurerm_resource_group.vm_module_tests.location
+  resource_group_name         = azurerm_resource_group.vm_module_tests.name
+  tenant_id                   = data.azurerm_client_config.vm_module_tests.tenant_id
+  enabled_for_disk_encryption = true
+  enable_rbac_authorization   = true
+  sku_name                    = "standard"
+  provider                    = azurerm.spoke
 }
 
 resource "azurerm_key_vault_key" "vm_module_tests" {

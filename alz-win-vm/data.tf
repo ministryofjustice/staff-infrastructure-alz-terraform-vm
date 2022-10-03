@@ -30,7 +30,7 @@ data "azurerm_storage_account" "spoke_log_diag_sa" {
 }
 
 data "azurerm_backup_policy_vm" "spoke_vm_backup_policy_1_yr" {
-    count             = var.recovery_vault_name ? 1 : 0
+  count               = var.recovery_vault_name ? 1 : 0
   name                = "Policy-1-Year-Backup"
   recovery_vault_name = var.recovery_vault_name
   resource_group_name = var.recovery_vault_resource_group

@@ -1,5 +1,5 @@
 trigger:
-- none
+  - none
 
 pr:
   branches:
@@ -7,10 +7,10 @@ pr:
       - main
   paths:
     include:
-    - alz-linux-vm/
-    - alz-linux-win/
-    - tests/
-    - pester-tests.yaml
+      - alz-linux-vm/
+      - alz-linux-win/
+      - tests/
+      - pester-tests.yaml
 
 resources:
   repositories:
@@ -21,14 +21,13 @@ resources:
       endpoint: staff-infrastructure-alz-ci-templates
 
 variables:
-- name: applyOnPr
-  value: true
+  - name: applyOnPr
+    value: true
 
 pool:
   vmImage: ubuntu-latest
 
 stages:
-
   - template: azdo/template-terraform-deploy-stage.yml@templates
     parameters:
       deployFlag: true
@@ -69,32 +68,32 @@ stages:
   - stage: Test
     dependsOn: deploy_vms
     jobs:
-    - job: Test
-      steps:
-        - task: AzurePowerShell@5
-          inputs: 
-            azureSubscription: scVLZ
-            scriptType: InlineScript
-            workingDirectory: $(System.DefaultWorkingDirectory)/tests
-            TargetAzurePs: latestVersion
-            Inline: |
-              Install-Module -Name Pester -Force -SkipPublisherCheck
-              Invoke-Pester -CI ./tests.ps1
+      - job: Test
+        steps:
+          - task: AzurePowerShell@5
+            inputs:
+              azureSubscription: scVLZ
+              scriptType: InlineScript
+              workingDirectory: $(System.DefaultWorkingDirectory)/tests
+              TargetAzurePs: latestVersion
+              Inline: |
+                Install-Module -Name Pester -Force -SkipPublisherCheck
+                Invoke-Pester -CI ./tests.ps1
 
-        - task: PublishTestResults@2
-          inputs:
-              testResultsFormat: 'NUnit'
-              testResultsFiles: '$(System.DefaultWorkingDirectory)/tests/testResults.xml'
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: "NUnit"
+              testResultsFiles: "$(System.DefaultWorkingDirectory)/tests/testResults.xml"
               failTaskOnFailedTests: false
 
   - template: azdo/template-terraform-destroy-stage.yml@templates
     parameters:
       destroyFlag: true
-      stageName: 'destroy_vms'
+      stageName: "destroy_vms"
       spokeName: pr
       tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
       subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
-      stageDisplayName: 'Destroy VMs'
+      stageDisplayName: "Destroy VMs"
       backendServiceArm: scVLZ
       backendAzureRmResourceGroupName: rg-terraform-statefiles-001
       backendAzureRmStorageAccountName: samojtfstate001
@@ -109,11 +108,11 @@ stages:
   - template: azdo/template-terraform-destroy-stage.yml@templates
     parameters:
       destroyFlag: true
-      stageName: 'destroy_inf'
+      stageName: "destroy_inf"
       spokeName: pr
       tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
       subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
-      stageDisplayName: 'Destroy Supporting Resources'
+      stageDisplayName: "Destroy Supporting Resources"
       backendServiceArm: scVLZ
       backendAzureRmResourceGroupName: rg-terraform-statefiles-001
       backendAzureRmStorageAccountName: samojtfstate001
