@@ -15,8 +15,8 @@ data "azurerm_subnet" "alz_linux" {
 
 # Spoke service data lookup - for password management, backups, logs
 data "azurerm_key_vault" "core_spoke_keyvault" {
-  name                = var.core_spoke_keyvault_name
-  resource_group_name = var.core_spoke_keyvault_rg
+  name                = var.keyvault_name
+  resource_group_name = var.keyvault_rg
 }
 
 data "azurerm_key_vault_key" "spoke_vm_disk_enc_key" {

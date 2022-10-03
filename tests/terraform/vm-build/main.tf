@@ -19,8 +19,8 @@ module "linux_vm_tests" {
   vm_specifications                        = local.vm_specifications_linux
   storage_account_boot_diag_name           = "stalzvmtest7272"
   storage_account_boot_diag_resource_group = "rg-alz-vm-test-001"
-  core_spoke_keyvault_name                 = "kv-alz-vm-test-001"
-  core_spoke_keyvault_rg                   = "rg-alz-vm-test-001"
+  keyvault_name                            = "kv-alz-vm-test-001"
+  keyvault_rg                              = "rg-alz-vm-test-001"
   providers                                = { azurerm = azurerm.spoke }
 }
 
@@ -30,7 +30,7 @@ module "windows_vm_tests" {
   vm_specifications                        = local.vm_specifications_win
   storage_account_boot_diag_name           = "stalzvmtest7272"
   storage_account_boot_diag_resource_group = "rg-alz-vm-test-001"
-  core_spoke_keyvault_name                 = "kv-alz-vm-test-001"
-  core_spoke_keyvault_rg                   = "rg-alz-vm-test-001"
+  keyvault_name                            = "kv-alz-vm-test-001"
+  keyvault_rg                              = "rg-alz-vm-test-001"
   providers                                = { azurerm = azurerm.spoke }
 }
