@@ -1,0 +1,61 @@
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.2.6 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >=3.14.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | 3.3.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.14.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.3.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_backup_protected_vm.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/backup_protected_vm) | resource |
+| [azurerm_key_vault_secret.alz_win_passwords](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret) | resource |
+| [azurerm_managed_disk.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk) | resource |
+| [azurerm_network_interface.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
+| [azurerm_virtual_machine_data_disk_attachment.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment) | resource |
+| [azurerm_virtual_machine_extension.alz_win_ade_encryption](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
+| [azurerm_virtual_machine_extension.alz_win_antivirus](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
+| [azurerm_windows_virtual_machine.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine) | resource |
+| [random_password.alz_win](https://registry.terraform.io/providers/hashicorp/random/3.3.0/docs/resources/password) | resource |
+| [azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/backup_policy_vm) | data source |
+| [azurerm_key_vault.core_spoke_keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
+| [azurerm_key_vault_key.spoke_vm_disk_enc_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault_key) | data source |
+| [azurerm_resource_group.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
+| [azurerm_storage_account.spoke_log_diag_sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account) | data source |
+| [azurerm_subnet.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subnet) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | User account credentials are generated and pushed here | `string` | n/a | yes |
+| <a name="input_keyvault_rg"></a> [keyvault\_rg](#input\_keyvault\_rg) | Keyvault for credential storage Resource Group | `string` | n/a | yes |
+| <a name="input_recovery_vault_name"></a> [recovery\_vault\_name](#input\_recovery\_vault\_name) | Vault used for backups - must be provided if any VM specifies 'backup' = 'true' | `string` | `false` | no |
+| <a name="input_recovery_vault_resource_group"></a> [recovery\_vault\_resource\_group](#input\_recovery\_vault\_resource\_group) | Vault resource group - must be provided if any VM specifies 'backup' = 'true' | `string` | `false` | no |
+| <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Resource group to create the Virtual Machine(s) in | `string` | n/a | yes |
+| <a name="input_storage_account_boot_diag_name"></a> [storage\_account\_boot\_diag\_name](#input\_storage\_account\_boot\_diag\_name) | Storage account to store Boot diagnostic logs for Virtual Machine(s) | `string` | n/a | yes |
+| <a name="input_storage_account_boot_diag_resource_group"></a> [storage\_account\_boot\_diag\_resource\_group](#input\_storage\_account\_boot\_diag\_resource\_group) | Boot diagnostic Storage Account Resource Group | `string` | n/a | yes |
+| <a name="input_vm_specifications"></a> [vm\_specifications](#input\_vm\_specifications) | Configuration parameters for each Virtual Machine specified | <pre>map(object({<br>    vm_size            = string<br>    zone               = string<br>    publisher          = string<br>    offer              = string<br>    sku                = string<br>    version            = string<br>    os_disk_type       = optional(string)<br>    admin_user         = string<br>    patch_class        = string<br>    scheduled_shutdown = optional(bool)<br>    monitor            = optional(bool)<br>    backup             = optional(bool)<br>    enable_ade         = optional(bool)<br>    enable_av          = optional(bool)<br><br>    network = map(object({<br>      vnet                = string<br>      vnet_resource_group = string<br>      subnet              = string<br>      ip_address          = string<br>      custom_dns_servers  = optional(list(string))<br>    }))<br>    data_disks = map(object({<br>      size          = number<br>      type          = string<br>      create_option = string<br>    }))<br>    tags = map(string)<br>  }))</pre> | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_nics"></a> [nics](#output\_nics) | Resource ID's for all created NICs |
+| <a name="output_vm_identities"></a> [vm\_identities](#output\_vm\_identities) | Managed identities for all created VM's |
+| <a name="output_vm_ids"></a> [vm\_ids](#output\_vm\_ids) | Resource ID's for all created VM's |
+<!-- END_TF_DOCS -->

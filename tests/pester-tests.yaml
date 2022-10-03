@@ -1,0 +1,125 @@
+trigger:
+  - none
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - alz-linux-vm/
+      - alz-linux-win/
+      - tests/
+      - pester-tests.yaml
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: ministryofjustice/staff-infrastructure-alz-ci-templates
+      ref: refs/heads/main
+      endpoint: staff-infrastructure-alz-ci-templates
+
+variables:
+  - name: applyOnPr
+    value: true
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - template: azdo/template-terraform-deploy-stage.yml@templates
+    parameters:
+      deployFlag: true
+      stageName: "deploy_inf"
+      spokeName: pr
+      tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
+      subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
+      stageDisplayName: "Deploy Supporting Resources"
+      backendServiceArm: scVLZ
+      backendAzureRmResourceGroupName: rg-terraform-statefiles-001
+      backendAzureRmStorageAccountName: samojtfstate001
+      backendAzureRmContainerName: tfstatepullrequest
+      backendAzureRmKey: "alz-vm-module-infra-tests.terraform.tfstate"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/infra-build"
+      yamlenv: "pr_exclusivelock"
+      applyTfChanges: true
+      terraformVersion: 1.2.6
+
+  - template: azdo/template-terraform-deploy-stage.yml@templates
+    parameters:
+      deployFlag: true
+      stageName: "deploy_vms"
+      spokeName: pr
+      tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
+      subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
+      stageDisplayName: "Deploy VMs"
+      backendServiceArm: scVLZ
+      backendAzureRmResourceGroupName: rg-terraform-statefiles-001
+      backendAzureRmStorageAccountName: samojtfstate001
+      backendAzureRmContainerName: tfstatepullrequest
+      backendAzureRmKey: "alz-vm-module-tests.terraform.tfstate"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/vm-build"
+      yamlenv: "pr_exclusivelock"
+      applyTfChanges: true
+      terraformVersion: 1.2.6
+      dependsOn: [deploy_inf]
+
+  - stage: Test
+    dependsOn: deploy_vms
+    jobs:
+      - job: Test
+        steps:
+          - task: AzurePowerShell@5
+            inputs:
+              azureSubscription: scVLZ
+              scriptType: InlineScript
+              workingDirectory: $(System.DefaultWorkingDirectory)/tests
+              TargetAzurePs: latestVersion
+              Inline: |
+                Install-Module -Name Pester -Force -SkipPublisherCheck
+                Invoke-Pester -CI ./tests.ps1
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: "NUnit"
+              testResultsFiles: "$(System.DefaultWorkingDirectory)/tests/testResults.xml"
+              failTaskOnFailedTests: false
+
+  - template: azdo/template-terraform-destroy-stage.yml@templates
+    parameters:
+      destroyFlag: true
+      stageName: "destroy_vms"
+      spokeName: pr
+      tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
+      subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
+      stageDisplayName: "Destroy VMs"
+      backendServiceArm: scVLZ
+      backendAzureRmResourceGroupName: rg-terraform-statefiles-001
+      backendAzureRmStorageAccountName: samojtfstate001
+      backendAzureRmContainerName: tfstatepullrequest
+      backendAzureRmKey: "alz-vm-module-tests.terraform.tfstate"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/vm-build"
+      yamlenv: "pr_exclusivelock"
+      applyTfChanges: true
+      terraformVersion: 1.2.6
+      dependsOn: [test]
+
+  - template: azdo/template-terraform-destroy-stage.yml@templates
+    parameters:
+      destroyFlag: true
+      stageName: "destroy_inf"
+      spokeName: pr
+      tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
+      subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
+      stageDisplayName: "Destroy Supporting Resources"
+      backendServiceArm: scVLZ
+      backendAzureRmResourceGroupName: rg-terraform-statefiles-001
+      backendAzureRmStorageAccountName: samojtfstate001
+      backendAzureRmContainerName: tfstatepullrequest
+      backendAzureRmKey: "alz-vm-module-infra-tests.terraform.tfstate"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/infra-build"
+      yamlenv: "pr_exclusivelock"
+      applyTfChanges: true
+      terraformVersion: 1.2.6
+      dependsOn: [test, destroy_vms]
