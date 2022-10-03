@@ -74,11 +74,12 @@ stages:
         - task: AzurePowerShell@5
           inputs: 
             azureSubscription: scVLZ
-            scriptType: filepath
-            scriptPath: "$(System.DefaultWorkingDirectory)/tests/invoke-pester.ps1"
-            scriptArguments: "-Path tests.ps1"
+            scriptType: InlineScript
             workingDirectory: $(System.DefaultWorkingDirectory)/tests
             TargetAzurePs: latestVersion
+            Inline: |
+              Install-Module -Name Pester -Force -SkipPublisherCheck
+              Invoke-Pester ./tests.ps1
 
         - task: PublishTestResults@2
           inputs:
