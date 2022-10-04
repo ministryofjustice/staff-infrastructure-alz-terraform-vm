@@ -60,11 +60,11 @@ variable "keyvault_rg" {
 variable "recovery_vault_name" {
   description = "Vault used for backups - must be provided if any VM specifies 'backup' = 'true'"
   type        = string
-  default     = false
+  default     = null
 }
 
 variable "recovery_vault_resource_group" {
   description = "Vault resource group - must be provided if any VM specifies 'backup' = 'true'"
   type        = string
-  default     = false
+  default     = null
 }
