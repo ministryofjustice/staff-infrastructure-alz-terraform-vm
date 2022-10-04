@@ -15,5 +15,5 @@ jobs:
       with:
         working-dir: alz-linux-vm, alz-win-vm
         output-file: README.md
-        output-method: inject
+        output-method: replace
         git-push: "true"

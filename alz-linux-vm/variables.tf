@@ -46,12 +46,12 @@ variable "storage_account_boot_diag_resource_group" {
   type        = string
 }
 
-variable "core_spoke_keyvault_name" {
+variable "keyvault_name" {
   description = "User account credentials are generated and pushed here"
   type        = string
 }
 
-variable "core_spoke_keyvault_rg" {
+variable "keyvault_rg" {
   description = "Keyvault for credential storage Resource Group"
   type        = string
 }

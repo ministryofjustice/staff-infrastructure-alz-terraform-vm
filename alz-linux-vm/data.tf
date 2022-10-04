@@ -15,8 +15,8 @@ data "azurerm_subnet" "alz_linux" {
 
 # Spoke service data lookup - for password management, backups, logs
 data "azurerm_key_vault" "core_spoke_keyvault" {
-  name                = var.core_spoke_keyvault_name
-  resource_group_name = var.core_spoke_keyvault_rg
+  name                = var.keyvault_name
+  resource_group_name = var.keyvault_rg
 }
 
 data "azurerm_key_vault_key" "spoke_vm_disk_enc_key" {
@@ -30,6 +30,7 @@ data "azurerm_storage_account" "spoke_log_diag_sa" {
 }
 
 data "azurerm_backup_policy_vm" "spoke_vm_backup_policy_1_yr" {
+  count               = var.recovery_vault_name != null ? 1 : 0
   name                = "Policy-1-Year-Backup"
   recovery_vault_name = var.recovery_vault_name
   resource_group_name = var.recovery_vault_resource_group
