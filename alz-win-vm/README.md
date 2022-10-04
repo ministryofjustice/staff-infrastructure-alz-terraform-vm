@@ -44,8 +44,8 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | User account credentials are generated and pushed here | `string` | n/a | yes |
 | <a name="input_keyvault_rg"></a> [keyvault\_rg](#input\_keyvault\_rg) | Keyvault for credential storage Resource Group | `string` | n/a | yes |
-| <a name="input_recovery_vault_name"></a> [recovery\_vault\_name](#input\_recovery\_vault\_name) | Vault used for backups - must be provided if any VM specifies 'backup' = 'true' | `string` | `false` | no |
-| <a name="input_recovery_vault_resource_group"></a> [recovery\_vault\_resource\_group](#input\_recovery\_vault\_resource\_group) | Vault resource group - must be provided if any VM specifies 'backup' = 'true' | `string` | `false` | no |
+| <a name="input_recovery_vault_name"></a> [recovery\_vault\_name](#input\_recovery\_vault\_name) | Vault used for backups - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
+| <a name="input_recovery_vault_resource_group"></a> [recovery\_vault\_resource\_group](#input\_recovery\_vault\_resource\_group) | Vault resource group - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Resource group to create the Virtual Machine(s) in | `string` | n/a | yes |
 | <a name="input_storage_account_boot_diag_name"></a> [storage\_account\_boot\_diag\_name](#input\_storage\_account\_boot\_diag\_name) | Storage account to store Boot diagnostic logs for Virtual Machine(s) | `string` | n/a | yes |
 | <a name="input_storage_account_boot_diag_resource_group"></a> [storage\_account\_boot\_diag\_resource\_group](#input\_storage\_account\_boot\_diag\_resource\_group) | Boot diagnostic Storage Account Resource Group | `string` | n/a | yes |
