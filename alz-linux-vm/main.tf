@@ -92,6 +92,7 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   disable_password_authentication = false
   admin_password                  = random_password.alz_linux[each.key].result
   computer_name                   = each.key # remember this can only be 15 characters max
+  encryption_at_host_enabled      = each.value.enable_host_enc
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,

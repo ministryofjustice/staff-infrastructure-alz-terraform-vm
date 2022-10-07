@@ -18,6 +18,7 @@ variable "vm_specifications" {
     scheduled_shutdown = optional(bool)
     monitor            = optional(bool)
     backup             = optional(bool)
+    enable_host_enc    = optional(bool)
     enable_ade         = optional(bool)
     enable_av          = optional(bool)
 

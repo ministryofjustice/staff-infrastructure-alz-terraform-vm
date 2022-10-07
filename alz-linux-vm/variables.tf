@@ -19,6 +19,7 @@ variable "vm_specifications" {
     scheduled_shutdown = optional(bool)
     monitor            = optional(bool)
     backup             = optional(bool)
+    enable_host_enc    = optional(bool)
 
     network = map(object({
       vnet                = string
