@@ -17,7 +17,8 @@ resources:
     - repository: templates
       type: github
       name: ministryofjustice/staff-infrastructure-alz-ci-templates
-      ref: refs/heads/main
+      #ref: refs/heads/main
+      ref: simplify_command_opts
       endpoint: staff-infrastructure-alz-ci-templates
 
 variables:
