@@ -9,8 +9,3 @@ variable "tenant_id" {
   description = "Tenant ID"
   default     = "0bb413d7-160d-4839-868a-f3d46537f6af" # dev
 }
-
-variable "environment" {
-  description = "Spoke name/Environment"
-  default     = "pester-test"
-}

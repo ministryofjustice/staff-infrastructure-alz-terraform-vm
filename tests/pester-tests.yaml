@@ -90,7 +90,6 @@ stages:
     parameters:
       destroyFlag: true
       stageName: "destroy_vms"
-      spokeName: pr
       tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
       subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
       stageDisplayName: "Destroy VMs"
@@ -109,7 +108,6 @@ stages:
     parameters:
       destroyFlag: true
       stageName: "destroy_inf"
-      spokeName: pr
       tenant_id: 0bb413d7-160d-4839-868a-f3d46537f6af
       subscription_id: 4b068872-d9f3-41bc-9c34-ffac17cf96d6 #Devl testing
       stageDisplayName: "Destroy Supporting Resources"
