@@ -41,7 +41,7 @@ stages:
       backendAzureRmStorageAccountName: samojtfstate001
       backendAzureRmContainerName: tfstatepullrequest
       backendAzureRmKey: "alz-vm-module-infra-tests.terraform.tfstate"
-      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/infra-build"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/infra-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
       terraformVersion: 1.2.6
@@ -59,7 +59,7 @@ stages:
       backendAzureRmStorageAccountName: samojtfstate001
       backendAzureRmContainerName: tfstatepullrequest
       backendAzureRmKey: "alz-vm-module-tests.terraform.tfstate"
-      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/vm-build"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/vm-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
       terraformVersion: 1.2.6
@@ -74,7 +74,7 @@ stages:
             inputs:
               azureSubscription: scVLZ
               scriptType: InlineScript
-              workingDirectory: $(System.DefaultWorkingDirectory)/tests
+              workingDirectory: $(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests
               TargetAzurePs: latestVersion
               Inline: |
                 Install-Module -Name Pester -Force -SkipPublisherCheck
@@ -83,7 +83,7 @@ stages:
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: "NUnit"
-              testResultsFiles: "$(System.DefaultWorkingDirectory)/tests/testResults.xml"
+              testResultsFiles: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/testResults.xml"
               failTaskOnFailedTests: false
 
   - template: azdo/template-terraform-destroy-stage.yml@templates
@@ -98,7 +98,7 @@ stages:
       backendAzureRmStorageAccountName: samojtfstate001
       backendAzureRmContainerName: tfstatepullrequest
       backendAzureRmKey: "alz-vm-module-tests.terraform.tfstate"
-      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/vm-build"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/vm-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
       terraformVersion: 1.2.6
@@ -116,7 +116,7 @@ stages:
       backendAzureRmStorageAccountName: samojtfstate001
       backendAzureRmContainerName: tfstatepullrequest
       backendAzureRmKey: "alz-vm-module-infra-tests.terraform.tfstate"
-      workingDirectory: "$(System.DefaultWorkingDirectory)/tests/terraform/infra-build"
+      workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/infra-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
       terraformVersion: 1.2.6
