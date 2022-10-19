@@ -11,6 +11,8 @@ pr:
       - alz-linux-win/
       - tests/
       - pester-tests.yaml
+    exclude:
+      - /**/*.md
 
 resources:
   repositories:
