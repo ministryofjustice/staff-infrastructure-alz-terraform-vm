@@ -19,7 +19,7 @@ resources:
     - repository: templates
       type: github
       name: ministryofjustice/staff-infrastructure-alz-ci-templates
-      ref: destroy_task_checkout_templates #refs/heads/main
+      ref: refs/heads/main
       endpoint: staff-infrastructure-alz-ci-templates
 
 variables:
