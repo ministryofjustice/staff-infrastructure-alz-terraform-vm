@@ -11,7 +11,7 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "terraform"
-    directory: "/tests/terraform/"
+    directory: "/tests/terraform/infra-build", "/tests/terraform/vm-build"
     schedule:
       interval: "weekly"
       day: "sunday"
