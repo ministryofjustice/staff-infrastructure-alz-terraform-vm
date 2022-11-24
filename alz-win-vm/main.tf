@@ -126,6 +126,10 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
     sku       = each.value.sku
     version   = each.value.version
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 
