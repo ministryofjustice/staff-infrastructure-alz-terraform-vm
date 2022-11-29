@@ -60,7 +60,7 @@ resource "random_string" "alz_win_identity" {
 
 resource "azurerm_user_assigned_identity" "alz_win" {
   location            = data.azurerm_resource_group.alz_win.location
-  name                = "win-vm-identity-${random_string.alz_win_identity.result}"
+  name                = "mi-winvm-${random_string.alz_win_identity.result}"
   resource_group_name = data.azurerm_resource_group.alz_win.name
 }
 
@@ -238,7 +238,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_ade_encryption" {
 
 resource "azurerm_virtual_machine_extension" "alz_win_ama" {
   for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
-  name                 = "AzureDiskEncrpytion"
+  name                 = "AzureMonitorAgent"
   virtual_machine_id   = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher            = "Microsoft.Azure.Monitor"
   type                 = "AzureMonitorWindowsAgent"
@@ -246,13 +246,12 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
   auto_upgrade_minor_version = true
   settings             = <<SETTINGS
     {
-        "EncryptionOperation": "EnableEncryption",
-        "KeyEncryptionAlgorithm": "RSA-OAEP",
-        "KeyEncryptionKeyURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}keys/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.name}/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.version}",
-        "KeyVaultURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}",
-        "KeyVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
-        "KekVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
-        "VolumeType": "All"
+      "authentication": {
+        "managedidentity": {
+          "identifier-name": "mi_res_id",
+          "identifier-value": "${azurerm_user_assigned_identity.alz_win.id}"
+        }
+      }
     }
     SETTINGS
 }
