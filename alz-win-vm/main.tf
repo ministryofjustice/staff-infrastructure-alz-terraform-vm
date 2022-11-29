@@ -47,6 +47,23 @@ locals {
 
 }
 
+# Create a managed identity - this is shared between all VM's created per module call
+# Sharing an identity reduces churn in Azure AD and is better when working at scale
+# https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/managed-identity-best-practice-recommendations
+
+resource "random_string" "alz_win_identity" {
+  length = 10
+  special = false
+  upper = false
+  min_numeric = 3
+}
+
+resource "azurerm_user_assigned_identity" "alz_win" {
+  location            = data.azurerm_resource_group.alz_win.location
+  name                = "win-vm-identity-${random_string.alz_win_identity.result}"
+  resource_group_name = data.azurerm_resource_group.alz_win.name
+}
+
 # Generate a password for each VM, then push it to Keyvault
 resource "random_password" "alz_win" {
   for_each         = local.vm_specifications
@@ -100,7 +117,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   tags = merge(each.value.tags,
     {
       "UpdateClass"                    = each.value.patch_class
-      "prometheusAzureVirtualMachines" = each.value.monitor ? "tomonitor" : "notmonitored"
       "scheduled_shutdown"             = each.value.scheduled_shutdown ? "true" : "false"
   })
 
@@ -128,7 +144,8 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.alz_win.id]
   }
 }
 
@@ -204,6 +221,29 @@ resource "azurerm_virtual_machine_extension" "alz_win_ade_encryption" {
   publisher            = "Microsoft.Azure.Security"
   type                 = "AzureDiskEncryption"
   type_handler_version = "2.2"
+  settings             = <<SETTINGS
+    {
+        "EncryptionOperation": "EnableEncryption",
+        "KeyEncryptionAlgorithm": "RSA-OAEP",
+        "KeyEncryptionKeyURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}keys/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.name}/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.version}",
+        "KeyVaultURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}",
+        "KeyVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
+        "KekVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
+        "VolumeType": "All"
+    }
+    SETTINGS
+}
+
+# Install Azure monitor agent
+
+resource "azurerm_virtual_machine_extension" "alz_win_ama" {
+  for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                 = "AzureDiskEncrpytion"
+  virtual_machine_id   = azurerm_windows_virtual_machine.alz_win[each.key].id
+  publisher            = "Microsoft.Azure.Monitor"
+  type                 = "AzureMonitorWindowsAgent"
+  type_handler_version = "1.10.0.0"
+  auto_upgrade_minor_version = true
   settings             = <<SETTINGS
     {
         "EncryptionOperation": "EnableEncryption",
