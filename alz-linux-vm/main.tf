@@ -44,6 +44,19 @@ locals {
 
 }
 
+resource "random_string" "alz_linux_identity" {
+  length = 10
+  special = false
+  upper = false
+  min_numeric = 3
+}
+
+resource "azurerm_user_assigned_identity" "alz_linux" {
+  location            = data.azurerm_resource_group.alz_linux.location
+  name                = "mi-linuxvm-${random_string.alz_linux_identity.result}"
+  resource_group_name = data.azurerm_resource_group.alz_linux.name
+}
+
 # Generate a password for each VM, then push it to Keyvault
 resource "random_password" "alz_linux" {
   for_each         = local.vm_specifications
@@ -160,4 +173,34 @@ resource "azurerm_backup_protected_vm" "alz_linux" {
   recovery_vault_name = var.recovery_vault_name
   backup_policy_id    = data.azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr[0].id # indexed because data source uses a count toggle
   source_vm_id        = azurerm_linux_virtual_machine.alz_linux[each.key].id
+}
+
+# Install Azure monitor agent and associate it to a data collection rule
+resource "azurerm_virtual_machine_extension" "alz_linux_ama" {
+  for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                 = "AzureMonitorAgent"
+  virtual_machine_id   = azurerm_linux_virtual_machine.alz_linux[each.key].id
+  publisher            = "Microsoft.Azure.Monitor"
+  type                 = "	AzureMonitorLinuxAgent"
+  type_handler_version = "1.9"
+  auto_upgrade_minor_version = true
+  settings             = <<SETTINGS
+    {
+      "authentication": {
+        "managedidentity": {
+          "identifier-name": "mi_res_id",
+          "identifier-value": "${azurerm_user_assigned_identity.alz_linux.id}"
+        }
+      }
+    }
+    SETTINGS
+}
+
+# associate to a Data Collection Rule
+resource "azurerm_monitor_data_collection_rule_association" "alz_linux" {
+  for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                    = azurerm_linux_virtual_machine.alz_linux[each.key].name
+  target_resource_id      = azurerm_linux_virtual_machine.alz_linux[each.key].id
+  data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor.id
+  description             = "Association for ${azurerm_linux_virtual_machine.alz_linux[each.key].name} for use with Azure Monitor Agent"
 }
