@@ -242,7 +242,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
   virtual_machine_id   = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher            = "Microsoft.Azure.Monitor"
   type                 = "AzureMonitorWindowsAgent"
-  type_handler_version = "1.9.0.0"
+  type_handler_version = "1.9"
   auto_upgrade_minor_version = true
   settings             = <<SETTINGS
     {
