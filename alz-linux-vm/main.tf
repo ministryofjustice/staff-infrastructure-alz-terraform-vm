@@ -181,7 +181,7 @@ resource "azurerm_virtual_machine_extension" "alz_linux_ama" {
   name                 = "AzureMonitorAgent"
   virtual_machine_id   = azurerm_linux_virtual_machine.alz_linux[each.key].id
   publisher            = "Microsoft.Azure.Monitor"
-  type                 = "	AzureMonitorLinuxAgent"
+  type                 = "AzureMonitorLinuxAgent"
   type_handler_version = "1.9"
   auto_upgrade_minor_version = true
   settings             = <<SETTINGS
