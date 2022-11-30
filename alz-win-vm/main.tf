@@ -258,6 +258,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
 # associate to a Data Collection Rule
 resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
   for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                    = azurerm_windows_virtual_machine.alz_win[each.key].name
   target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
   data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor.id
   description             = "Association for ${azurerm_windows_virtual_machine.alz_win[each.key].name} for use with Azure Monitor Agent"
