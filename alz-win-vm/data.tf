@@ -35,3 +35,8 @@ data "azurerm_backup_policy_vm" "spoke_vm_backup_policy_1_yr" {
   recovery_vault_name = var.recovery_vault_name
   resource_group_name = var.recovery_vault_resource_group
 }
+
+data "azurerm_monitor_data_collection_rule" "azure_monitor" {
+  name                = var.data_collection_rule_monitor_name
+  resource_group_name = var.data_collection_rule_monitor_resource_group
+}

@@ -234,8 +234,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_ade_encryption" {
     SETTINGS
 }
 
-# Install Azure monitor agent
-
+# Install Azure monitor agent and associate it to a data collection rule
 resource "azurerm_virtual_machine_extension" "alz_win_ama" {
   for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
   name                 = "AzureMonitorAgent"
@@ -254,4 +253,12 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
       }
     }
     SETTINGS
+}
+
+# associate to a Data Collection Rule
+resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
+  for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
+  target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
+  data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor.id
+  description             = "Association for ${azurerm_windows_virtual_machine.alz_win[each.key].name} for use with Azure Monitor Agent"
 }
