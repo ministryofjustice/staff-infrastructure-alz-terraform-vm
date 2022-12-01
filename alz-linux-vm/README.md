@@ -4,14 +4,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.2.6 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >=3.14.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >=3.33.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.14.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.33.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.3.0 |
 
 ## Modules
@@ -26,12 +26,16 @@ No modules.
 | [azurerm_key_vault_secret.alz_linux_passwords](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret) | resource |
 | [azurerm_linux_virtual_machine.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | resource |
 | [azurerm_managed_disk.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk) | resource |
+| [azurerm_monitor_data_collection_rule_association.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_data_collection_rule_association) | resource |
 | [azurerm_network_interface.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
+| [azurerm_user_assigned_identity.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) | resource |
 | [azurerm_virtual_machine_data_disk_attachment.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment) | resource |
+| [azurerm_virtual_machine_extension.alz_linux_ama](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
 | [random_password.alz_linux](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [random_string.alz_linux_identity](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/backup_policy_vm) | data source |
 | [azurerm_key_vault.core_spoke_keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
-| [azurerm_key_vault_key.spoke_vm_disk_enc_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault_key) | data source |
+| [azurerm_monitor_data_collection_rule.azure_monitor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/monitor_data_collection_rule) | data source |
 | [azurerm_resource_group.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 | [azurerm_storage_account.spoke_log_diag_sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account) | data source |
 | [azurerm_subnet.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subnet) | data source |
@@ -40,6 +44,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_data_collection_rule_monitor_name"></a> [data\_collection\_rule\_monitor\_name](#input\_data\_collection\_rule\_monitor\_name) | Name of the data collection rule used for Azure monitor agent data streams | `string` | `null` | no |
+| <a name="input_data_collection_rule_monitor_resource_group"></a> [data\_collection\_rule\_monitor\_resource\_group](#input\_data\_collection\_rule\_monitor\_resource\_group) | Resource group that contains the data collection rule used for Azure monitor agent data streams | `string` | `null` | no |
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | User account credentials are generated and pushed here | `string` | n/a | yes |
 | <a name="input_keyvault_rg"></a> [keyvault\_rg](#input\_keyvault\_rg) | Keyvault for credential storage Resource Group | `string` | n/a | yes |
 | <a name="input_recovery_vault_name"></a> [recovery\_vault\_name](#input\_recovery\_vault\_name) | Vault used for backups - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
