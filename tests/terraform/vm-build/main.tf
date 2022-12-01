@@ -25,12 +25,14 @@ module "linux_vm_tests" {
 }
 
 module "windows_vm_tests" {
-  source                                   = "../../../alz-win-vm"
-  resource_group                           = "rg-alz-vm-test-001"
-  vm_specifications                        = local.vm_specifications_win
-  storage_account_boot_diag_name           = "stalzvmtest7272"
-  storage_account_boot_diag_resource_group = "rg-alz-vm-test-001"
-  keyvault_name                            = "kv-alz-vm-test-001"
-  keyvault_rg                              = "rg-alz-vm-test-001"
-  providers                                = { azurerm = azurerm.spoke }
+  source                                      = "../../../alz-win-vm"
+  resource_group                              = "rg-alz-vm-test-001"
+  vm_specifications                           = local.vm_specifications_win
+  storage_account_boot_diag_name              = "stalzvmtest7272"
+  storage_account_boot_diag_resource_group    = "rg-alz-vm-test-001"
+  keyvault_name                               = "kv-alz-vm-test-001"
+  keyvault_rg                                 = "rg-alz-vm-test-001"
+  data_collection_rule_monitor_name           = "dcr-alz-vm-test-001"
+  data_collection_rule_monitor_resource_group = "rg-alz-vm-test-001"
+  providers                                   = { azurerm = azurerm.spoke }
 }

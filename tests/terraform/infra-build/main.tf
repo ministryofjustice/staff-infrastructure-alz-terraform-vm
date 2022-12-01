@@ -82,3 +82,41 @@ resource "azurerm_storage_account" "vm_module_tests" {
   allow_nested_items_to_be_public = false
   provider                        = azurerm.spoke
 }
+
+resource "azurerm_log_analytics_workspace" "vm_module_tests" {
+  name                = "log-alz-vm-test-001"
+  location            = azurerm_resource_group.vm_module_tests.location
+  resource_group_name = azurerm_resource_group.vm_module_tests.name
+  sku                 = "PerGB2018" 
+  retention_in_days   = 30
+  daily_quota_gb      = 10
+  provider            = azurerm.spoke
+}
+
+resource "azurerm_monitor_data_collection_rule" "vm_module_tests" {
+  name                = "dcr-alz-vm-test-001"
+  resource_group_name = azurerm_resource_group.vm_module_tests.name
+  location            = azurerm_resource_group.vm_module_tests.location
+  provider            = azurerm.spoke
+
+  destinations {
+    log_analytics {
+      workspace_resource_id = azurerm_log_analytics_workspace.vm_module_tests.id
+      name                  = "VMInsightsPerf-Logs-Dest"
+    }
+  }
+
+  data_sources {
+    performance_counter {
+      counter_specifiers = ["\\VmInsights\\DetailedMetrics"]
+      name = "VMInsightsPerfCounters"
+      sampling_frequency_in_seconds = 60
+      streams = ["Microsoft-InsightsMetrics"]
+    }
+  }
+
+  data_flow {
+    streams      = ["Microsoft-InsightsMetrics"]
+    destinations = ["VMInsightsPerf-Logs-Dest"]
+  }
+}
