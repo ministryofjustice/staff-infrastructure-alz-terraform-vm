@@ -19,7 +19,6 @@ variable "vm_specifications" {
     monitor            = optional(bool)
     backup             = optional(bool)
     enable_host_enc    = optional(bool)
-    enable_ade         = optional(bool)
     enable_av          = optional(bool)
 
     network = map(object({

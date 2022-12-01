@@ -40,7 +40,6 @@ locals {
     scheduled_shutdown = false
     monitor            = false
     backup             = false
-    enable_ade         = false
     enable_av          = false
     enable_host_enc    = false
   })
@@ -209,29 +208,6 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
      }
   }
   SETTINGS
-}
-
-# Azure Disk Encryption (ADE) via VM extension with Bitlocker pointing at a key stored in KV
-# We want to attach all the data disks before we run the encryption extension
-resource "azurerm_virtual_machine_extension" "alz_win_ade_encryption" {
-  for_each             = { for k, v in local.vm_specifications : k => k if v.enable_ade }
-  depends_on           = [azurerm_virtual_machine_data_disk_attachment.alz_win]
-  name                 = "AzureDiskEncrpytion"
-  virtual_machine_id   = azurerm_windows_virtual_machine.alz_win[each.key].id
-  publisher            = "Microsoft.Azure.Security"
-  type                 = "AzureDiskEncryption"
-  type_handler_version = "2.2"
-  settings             = <<SETTINGS
-    {
-        "EncryptionOperation": "EnableEncryption",
-        "KeyEncryptionAlgorithm": "RSA-OAEP",
-        "KeyEncryptionKeyURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}keys/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.name}/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.version}",
-        "KeyVaultURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}",
-        "KeyVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
-        "KekVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
-        "VolumeType": "All"
-    }
-    SETTINGS
 }
 
 # Install Azure monitor agent and associate it to a data collection rule

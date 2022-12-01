@@ -11,8 +11,8 @@ locals {
       patch_class        = "Bronze1"
       scheduled_shutdown = true
       monitor            = true
+      enable_av          = true
       backup             = false
-      enable_ade         = true
 
       network = {
         nic-mgmt = {

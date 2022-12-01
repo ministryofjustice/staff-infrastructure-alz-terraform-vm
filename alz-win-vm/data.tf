@@ -19,11 +19,6 @@ data "azurerm_key_vault" "core_spoke_keyvault" {
   resource_group_name = var.keyvault_rg
 }
 
-data "azurerm_key_vault_key" "spoke_vm_disk_enc_key" {
-  key_vault_id = data.azurerm_key_vault.core_spoke_keyvault.id
-  name         = "diskEncryption" # this key is created by our spoke module, so I can't see why it would ever change
-}
-
 data "azurerm_storage_account" "spoke_log_diag_sa" {
   name                = var.storage_account_boot_diag_name
   resource_group_name = var.storage_account_boot_diag_resource_group
