@@ -40,11 +40,27 @@ locals {
     scheduled_shutdown = false
     monitor            = false
     backup             = false
-    enable_ade         = false
     enable_av          = false
     enable_host_enc    = false
   })
 
+}
+
+# Create a managed identity - this is shared between all VM's created per module call
+# Sharing an identity reduces churn in Azure AD and is better when working at scale
+# https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/managed-identity-best-practice-recommendations
+
+resource "random_string" "alz_win_identity" {
+  length = 10
+  special = false
+  upper = false
+  min_numeric = 3
+}
+
+resource "azurerm_user_assigned_identity" "alz_win" {
+  location            = data.azurerm_resource_group.alz_win.location
+  name                = "mi-winvm-${random_string.alz_win_identity.result}"
+  resource_group_name = data.azurerm_resource_group.alz_win.name
 }
 
 # Generate a password for each VM, then push it to Keyvault
@@ -100,7 +116,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   tags = merge(each.value.tags,
     {
       "UpdateClass"                    = each.value.patch_class
-      "prometheusAzureVirtualMachines" = each.value.monitor ? "tomonitor" : "notmonitored"
       "scheduled_shutdown"             = each.value.scheduled_shutdown ? "true" : "false"
   })
 
@@ -128,7 +143,8 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.alz_win.id]
   }
 }
 
@@ -194,25 +210,32 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   SETTINGS
 }
 
-# Azure Disk Encryption (ADE) via VM extension with Bitlocker pointing at a key stored in KV
-# We want to attach all the data disks before we run the encryption extension
-resource "azurerm_virtual_machine_extension" "alz_win_ade_encryption" {
-  for_each             = { for k, v in local.vm_specifications : k => k if v.enable_ade }
-  depends_on           = [azurerm_virtual_machine_data_disk_attachment.alz_win]
-  name                 = "AzureDiskEncrpytion"
+# Install Azure monitor agent and associate it to a data collection rule
+resource "azurerm_virtual_machine_extension" "alz_win_ama" {
+  for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                 = "AzureMonitorAgent"
   virtual_machine_id   = azurerm_windows_virtual_machine.alz_win[each.key].id
-  publisher            = "Microsoft.Azure.Security"
-  type                 = "AzureDiskEncryption"
-  type_handler_version = "2.2"
+  publisher            = "Microsoft.Azure.Monitor"
+  type                 = "AzureMonitorWindowsAgent"
+  type_handler_version = "1.9"
+  auto_upgrade_minor_version = true
   settings             = <<SETTINGS
     {
-        "EncryptionOperation": "EnableEncryption",
-        "KeyEncryptionAlgorithm": "RSA-OAEP",
-        "KeyEncryptionKeyURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}keys/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.name}/${data.azurerm_key_vault_key.spoke_vm_disk_enc_key.version}",
-        "KeyVaultURL": "${data.azurerm_key_vault.core_spoke_keyvault.vault_uri}",
-        "KeyVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
-        "KekVaultResourceId": "${data.azurerm_key_vault.core_spoke_keyvault.id}",
-        "VolumeType": "All"
+      "authentication": {
+        "managedidentity": {
+          "identifier-name": "mi_res_id",
+          "identifier-value": "${azurerm_user_assigned_identity.alz_win.id}"
+        }
+      }
     }
     SETTINGS
+}
+
+# associate to a Data Collection Rule
+resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
+  for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                    = azurerm_windows_virtual_machine.alz_win[each.key].name
+  target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
+  data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id
+  description             = "Association for ${azurerm_windows_virtual_machine.alz_win[each.key].name} for use with Azure Monitor Agent"
 }

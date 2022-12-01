@@ -19,7 +19,6 @@ variable "vm_specifications" {
     monitor            = optional(bool)
     backup             = optional(bool)
     enable_host_enc    = optional(bool)
-    enable_ade         = optional(bool)
     enable_av          = optional(bool)
 
     network = map(object({
@@ -46,6 +45,18 @@ variable "storage_account_boot_diag_name" {
 variable "storage_account_boot_diag_resource_group" {
   description = "Boot diagnostic Storage Account Resource Group"
   type        = string
+}
+
+variable "data_collection_rule_monitor_name" {
+  description = "Name of the data collection rule used for Azure monitor agent data streams"
+  type        = string
+  default     = null
+}
+
+variable "data_collection_rule_monitor_resource_group" {
+  description = "Resource group that contains the data collection rule used for Azure monitor agent data streams"
+  type        = string
+  default     = null
 }
 
 variable "keyvault_name" {

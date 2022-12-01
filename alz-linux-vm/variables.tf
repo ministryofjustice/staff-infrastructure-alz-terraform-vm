@@ -47,6 +47,19 @@ variable "storage_account_boot_diag_resource_group" {
   type        = string
 }
 
+variable "data_collection_rule_monitor_name" {
+  description = "Name of the data collection rule used for Azure monitor agent data streams"
+  type        = string
+  default     = null
+}
+
+variable "data_collection_rule_monitor_resource_group" {
+  description = "Resource group that contains the data collection rule used for Azure monitor agent data streams"
+  type        = string
+  default     = null
+}
+
+
 variable "keyvault_name" {
   description = "User account credentials are generated and pushed here"
   type        = string
