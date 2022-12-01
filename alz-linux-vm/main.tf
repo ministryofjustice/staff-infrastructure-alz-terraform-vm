@@ -201,6 +201,6 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_linux" {
   for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
   name                    = azurerm_linux_virtual_machine.alz_linux[each.key].name
   target_resource_id      = azurerm_linux_virtual_machine.alz_linux[each.key].id
-  data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor.id
+  data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id
   description             = "Association for ${azurerm_linux_virtual_machine.alz_linux[each.key].name} for use with Azure Monitor Agent"
 }

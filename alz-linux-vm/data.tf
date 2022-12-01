@@ -37,6 +37,7 @@ data "azurerm_backup_policy_vm" "spoke_vm_backup_policy_1_yr" {
 }
 
 data "azurerm_monitor_data_collection_rule" "azure_monitor" {
+  count               = var.data_collection_rule_monitor_name != null ? 1 : 0
   name                = var.data_collection_rule_monitor_name
   resource_group_name = var.data_collection_rule_monitor_resource_group
 }
