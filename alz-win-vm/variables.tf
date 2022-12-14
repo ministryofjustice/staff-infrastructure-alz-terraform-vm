@@ -20,6 +20,7 @@ variable "vm_specifications" {
     backup             = optional(bool)
     enable_host_enc    = optional(bool)
     enable_av          = optional(bool)
+    license_type       = optional(string)
 
     network = map(object({
       vnet                = string
