@@ -52,9 +52,9 @@ locals {
 # https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/managed-identity-best-practice-recommendations
 
 resource "random_string" "alz_win_identity" {
-  length = 10
-  special = false
-  upper = false
+  length      = 10
+  special     = false
+  upper       = false
   min_numeric = 3
 }
 
@@ -117,8 +117,8 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
     {
-      "UpdateClass"                    = each.value.patch_class
-      "scheduled_shutdown"             = each.value.scheduled_shutdown ? "true" : "false"
+      "UpdateClass"        = each.value.patch_class
+      "scheduled_shutdown" = each.value.scheduled_shutdown ? "true" : "false"
   })
 
   os_disk {
@@ -145,7 +145,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   }
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_win.id]
   }
 }
@@ -214,14 +214,14 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
 
 # Install Azure monitor agent and associate it to a data collection rule
 resource "azurerm_virtual_machine_extension" "alz_win_ama" {
-  for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
-  name                 = "AzureMonitorAgent"
-  virtual_machine_id   = azurerm_windows_virtual_machine.alz_win[each.key].id
-  publisher            = "Microsoft.Azure.Monitor"
-  type                 = "AzureMonitorWindowsAgent"
-  type_handler_version = "1.9"
+  for_each                   = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                       = "AzureMonitorAgent"
+  virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
+  publisher                  = "Microsoft.Azure.Monitor"
+  type                       = "AzureMonitorWindowsAgent"
+  type_handler_version       = "1.9"
   auto_upgrade_minor_version = true
-  settings             = <<SETTINGS
+  settings                   = <<SETTINGS
     {
       "authentication": {
         "managedidentity": {
