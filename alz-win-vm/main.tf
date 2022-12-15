@@ -112,6 +112,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   admin_password             = random_password.alz_win[each.key].result
   computer_name              = each.key # remember this can only be 15 characters max
   encryption_at_host_enabled = each.value.enable_host_enc
+  license_type               = each.value.license_type
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,

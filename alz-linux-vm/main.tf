@@ -139,7 +139,8 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.alz_linux.id]
   }
 }
 
