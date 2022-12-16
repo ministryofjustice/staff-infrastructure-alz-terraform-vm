@@ -8,7 +8,7 @@ pr:
   paths:
     include:
       - alz-linux-vm/
-      - alz-linux-win/
+      - alz-win-vm/
       - tests/
       - pester-tests.yaml
     exclude:
