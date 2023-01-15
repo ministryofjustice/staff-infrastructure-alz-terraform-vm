@@ -30,6 +30,7 @@ variable "vm_specifications" {
     }))
     data_disks = map(object({
       size          = number
+      lun           = number
       type          = string
       create_option = string
     }))

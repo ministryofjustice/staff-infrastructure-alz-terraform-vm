@@ -26,11 +26,13 @@ locals {
       data_disks = {
         data1 = {
           size          = 20
+          lun           = 10
           type          = "Standard_LRS"
           create_option = "Empty"
         },
         data2 = {
           size          = 25
+          lun           = 11
           type          = "Standard_LRS"
           create_option = "Empty"
         }
@@ -68,11 +70,13 @@ locals {
       data_disks = {
         data1 = {
           size          = 20
+          lun           = 10
           type          = "Standard_LRS"
           create_option = "Empty"
         },
         data2 = {
           size          = 25
+          lun           = 11
           type          = "Standard_LRS"
           create_option = "Empty"
         }

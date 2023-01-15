@@ -23,6 +23,7 @@ locals {
         vm_name       = vm_key
         disk_name     = disk_key
         size          = disk.size
+        lun           = disk.lun
         type          = disk.type
         create_option = disk.create_option
         tags          = vm.tags
@@ -162,7 +163,8 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   for_each           = { for disk in local.data_disk_config : "${disk.disk_name}-${disk.vm_name}" => disk }
   managed_disk_id    = azurerm_managed_disk.alz_linux[each.key].id # lookup the correct managed disk ID's using the combo of disk name and vm name
   virtual_machine_id = azurerm_linux_virtual_machine.alz_linux[each.value.vm_name].id
-  lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
+ # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
+  lun                = each.value.lun
   caching            = "ReadWrite"
 }
 
