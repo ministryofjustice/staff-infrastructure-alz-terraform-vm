@@ -261,14 +261,7 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
 # See this issue - https://github.com/Azure/azure-rest-api-specs/issues/22434
 # This is an attempt to workaround these in the short term until this issue is closed
 
-resource "null_resource" "previous" {}
-
 resource "time_sleep" "wait_30_seconds" {
   depends_on = [azurerm_virtual_machine_extension.alz_win_ama]
   create_duration = "30s"
-}
-
-# This resource will create (at least) 30 seconds after null_resource.previous
-resource "null_resource" "next" {
-  depends_on = [time_sleep.wait_30_seconds]
 }
