@@ -1,10 +1,3 @@
-Notes/Known Issues: 
-
-The Azure API seems to have concurrency issues when Terraform is creating extensions. See this issue - https://github.com/Azure/azure-rest-api-specs/issues/22434
-
-For this reason, the module for building Windows machines contains a temporary workaround that links the creation of the VM extensions with a 30 second sleep.
-
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -19,7 +12,9 @@ For this reason, the module for building Windows machines contains a temporary w
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.33.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.3.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | n/a |
 
 ## Modules
 
@@ -39,8 +34,11 @@ No modules.
 | [azurerm_virtual_machine_extension.alz_win_ama](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
 | [azurerm_virtual_machine_extension.alz_win_antivirus](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
 | [azurerm_windows_virtual_machine.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine) | resource |
+| [null_resource.next](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [null_resource.previous](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [random_password.alz_win](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_string.alz_win_identity](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [time_sleep.wait_30_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/backup_policy_vm) | data source |
 | [azurerm_key_vault.core_spoke_keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
 | [azurerm_monitor_data_collection_rule.azure_monitor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/monitor_data_collection_rule) | data source |
@@ -61,7 +59,7 @@ No modules.
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Resource group to create the Virtual Machine(s) in | `string` | n/a | yes |
 | <a name="input_storage_account_boot_diag_name"></a> [storage\_account\_boot\_diag\_name](#input\_storage\_account\_boot\_diag\_name) | Storage account to store Boot diagnostic logs for Virtual Machine(s) | `string` | n/a | yes |
 | <a name="input_storage_account_boot_diag_resource_group"></a> [storage\_account\_boot\_diag\_resource\_group](#input\_storage\_account\_boot\_diag\_resource\_group) | Boot diagnostic Storage Account Resource Group | `string` | n/a | yes |
-| <a name="input_vm_specifications"></a> [vm\_specifications](#input\_vm\_specifications) | Configuration parameters for each Virtual Machine specified | <pre>map(object({<br>    vm_size            = string<br>    zone               = string<br>    publisher          = string<br>    offer              = string<br>    sku                = string<br>    version            = string<br>    os_disk_type       = optional(string)<br>    admin_user         = string<br>    patch_class        = string<br>    scheduled_shutdown = optional(bool)<br>    monitor            = optional(bool)<br>    backup             = optional(bool)<br>    enable_host_enc    = optional(bool)<br>    enable_av          = optional(bool)<br>    license_type       = optional(string)<br><br>    network = map(object({<br>      vnet                = string<br>      vnet_resource_group = string<br>      subnet              = string<br>      ip_address          = string<br>      custom_dns_servers  = optional(list(string))<br>    }))<br>    data_disks = map(object({<br>      size          = number<br>      lun           = number<br>      type          = string<br>      create_option = string<br>    }))<br>    tags = map(string)<br>  }))</pre> | n/a | yes |
+| <a name="input_vm_specifications"></a> [vm\_specifications](#input\_vm\_specifications) | Configuration parameters for each Virtual Machine specified | <pre>map(object({<br>    vm_size            = string<br>    marketplace_image  = optional(bool)<br>    marketplace_plan   = optional(map(string))<br>    zone               = string<br>    publisher          = string<br>    offer              = string<br>    sku                = string<br>    version            = string<br>    os_disk_type       = optional(string)<br>    admin_user         = string<br>    patch_class        = string<br>    scheduled_shutdown = optional(bool)<br>    monitor            = optional(bool)<br>    backup             = optional(bool)<br>    enable_host_enc    = optional(bool)<br>    enable_av          = optional(bool)<br>    license_type       = optional(string)<br><br>    network = map(object({<br>      vnet                = string<br>      vnet_resource_group = string<br>      subnet              = string<br>      ip_address          = string<br>      public_ip_id        = optional(string)<br>      custom_dns_servers  = optional(list(string))<br>    }))<br>    data_disks = map(object({<br>      size          = number<br>      lun           = number<br>      type          = string<br>      create_option = string<br>    }))<br>    tags = map(string)<br>  }))</pre> | n/a | yes |
 
 ## Outputs
 
