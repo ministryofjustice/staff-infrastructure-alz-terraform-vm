@@ -7,6 +7,8 @@ variable "vm_specifications" {
   description = "Configuration parameters for each Virtual Machine specified"
   type = map(object({
     vm_size            = string
+    marketplace_image  = optional(bool)
+    marketplace_plan   = optional(map(string))
     zone               = string
     publisher          = string
     offer              = string
@@ -27,6 +29,7 @@ variable "vm_specifications" {
       vnet_resource_group = string
       subnet              = string
       ip_address          = string
+      public_ip_id        = optional(string)
       custom_dns_servers  = optional(list(string))
     }))
     data_disks = map(object({

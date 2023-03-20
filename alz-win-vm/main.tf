@@ -9,6 +9,7 @@ locals {
         vnet        = nic.vnet
         subnet      = nic.subnet
         ip          = nic.ip_address
+        pip_id      = nic.public_ip_id
         dns_servers = nic.custom_dns_servers
         vnet_rg     = nic.vnet_resource_group
         tags        = vm.tags
@@ -36,6 +37,7 @@ locals {
 
   vm_specifications = defaults(var.vm_specifications, {
     os_disk_type       = "Standard_LRS"
+    marketplace_image  = false
     admin_user         = "azureuser"
     patch_class        = "none"
     license_type       = "None"
@@ -98,6 +100,7 @@ resource "azurerm_network_interface" "alz_win" {
     subnet_id                     = data.azurerm_subnet.alz_win["${each.value.vm_name}.${each.value.subnet}"].id
     private_ip_address_allocation = "Static"
     private_ip_address            = each.value.ip
+    public_ip_address_id          = each.value.pip_id
   }
 }
 
@@ -145,6 +148,15 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
     version   = each.value.version
   }
 
+  dynamic "plan" {
+    for_each = each.value.marketplace_image ? [1] : []
+    content {
+      name       = each.value.marketplace_plan.name
+      publisher  = each.value.marketplace_plan.publisher
+      product    = each.value.marketplace_plan.product
+    }
+  }
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_win.id]
@@ -188,6 +200,7 @@ resource "azurerm_backup_protected_vm" "alz_win" {
 
 # Antivirus
 resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
+  depends_on                 = [time_sleep.wait_30_seconds] # See README
   for_each                   = { for k, v in local.vm_specifications : k => k if v.enable_av }
   name                       = "IaaSAntimalware"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
@@ -242,4 +255,13 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
   target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
   data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id
   description             = "Association for ${azurerm_windows_virtual_machine.alz_win[each.key].name} for use with Azure Monitor Agent"
+}
+
+# The Azure API seems to have concurrency issues when Terraform is creating extensions
+# See this issue - https://github.com/Azure/azure-rest-api-specs/issues/22434
+# This is an attempt to workaround these in the short term until this issue is closed
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [azurerm_virtual_machine_extension.alz_win_ama]
+  create_duration = "30s"
 }
