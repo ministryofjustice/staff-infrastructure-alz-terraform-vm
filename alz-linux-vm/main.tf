@@ -9,6 +9,7 @@ locals {
         vnet        = nic.vnet
         subnet      = nic.subnet
         ip          = nic.ip_address
+        pip_id      = nic.public_ip_id
         dns_servers = nic.custom_dns_servers
         vnet_rg     = nic.vnet_resource_group
         tags        = vm.tags
@@ -35,6 +36,7 @@ locals {
   # Set some defaults for our VM spec
 
   vm_specifications = defaults(var.vm_specifications, {
+    marketplace_image  = false
     os_disk_type       = "Standard_LRS"
     admin_user         = "azureuser"
     patch_class        = "none"
@@ -91,6 +93,7 @@ resource "azurerm_network_interface" "alz_linux" {
     subnet_id                     = data.azurerm_subnet.alz_linux["${each.value.vm_name}.${each.value.subnet}"].id
     private_ip_address_allocation = "Static"
     private_ip_address            = each.value.ip
+    public_ip_address_id          = each.value.pip_id
   }
 }
 
@@ -137,6 +140,15 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     offer     = each.value.offer
     sku       = each.value.sku
     version   = each.value.version
+  }
+
+  dynamic "plan" {
+    for_each = each.value.marketplace_image ? [1] : []
+    content {
+      name       = each.value.marketplace_plan.name
+      publisher  = each.value.marketplace_plan.publisher
+      product    = each.value.marketplace_plan.product
+    }
   }
 
   identity {
