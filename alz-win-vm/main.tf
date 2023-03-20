@@ -200,6 +200,7 @@ resource "azurerm_backup_protected_vm" "alz_win" {
 
 # Antivirus
 resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
+  depends_on                 = [time_sleep.wait_30_seconds] # See README
   for_each                   = { for k, v in local.vm_specifications : k => k if v.enable_av }
   name                       = "IaaSAntimalware"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
@@ -254,4 +255,20 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
   target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
   data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id
   description             = "Association for ${azurerm_windows_virtual_machine.alz_win[each.key].name} for use with Azure Monitor Agent"
+}
+
+# The Azure API seems to have concurrency issues when Terraform is creating extensions
+# See this issue - https://github.com/Azure/azure-rest-api-specs/issues/22434
+# This is an attempt to workaround these in the short term until this issue is closed
+
+resource "null_resource" "previous" {}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [azurerm_virtual_machine_extension.alz_win_ama]
+  create_duration = "30s"
+}
+
+# This resource will create (at least) 30 seconds after null_resource.previous
+resource "null_resource" "next" {
+  depends_on = [time_sleep.wait_30_seconds]
 }

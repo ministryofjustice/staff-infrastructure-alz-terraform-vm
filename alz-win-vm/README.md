@@ -1,3 +1,10 @@
+Notes/Known Issues: 
+
+The Azure API seems to have concurrency issues when Terraform is creating extensions. See this issue - https://github.com/Azure/azure-rest-api-specs/issues/22434
+
+For this reason, the module for building Windows machines contains a temporary workaround that links the creation of the VM extensions with a 30 second sleep.
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
