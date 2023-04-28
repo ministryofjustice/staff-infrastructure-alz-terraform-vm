@@ -39,13 +39,15 @@ locals {
     os_disk_type       = "Standard_LRS"
     marketplace_image  = false
     admin_user         = "azureuser"
-    patch_class        = "none"
     license_type       = "None"
     scheduled_shutdown = false
     monitor            = false
     backup             = false
     enable_av          = false
     enable_host_enc    = false
+    provision_vm_agent = "True"
+    patch_mode         = "AutomaticByPlatform"
+    patch_assessment_mode = "AutomaticByPlatform"
   })
 
 }
@@ -125,7 +127,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
     {
-      "UpdateClass"        = each.value.patch_class
       "scheduled_shutdown" = each.value.scheduled_shutdown ? "true" : "false"
   })
 
