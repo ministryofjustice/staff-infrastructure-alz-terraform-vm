@@ -48,9 +48,9 @@ locals {
 }
 
 resource "random_string" "alz_linux_identity" {
-  length = 10
-  special = false
-  upper = false
+  length      = 10
+  special     = false
+  upper       = false
   min_numeric = 3
 }
 
@@ -148,14 +148,14 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   dynamic "plan" {
     for_each = each.value.marketplace_image ? [1] : []
     content {
-      name       = each.value.marketplace_plan.name
-      publisher  = each.value.marketplace_plan.publisher
-      product    = each.value.marketplace_plan.product
+      name      = each.value.marketplace_plan.name
+      publisher = each.value.marketplace_plan.publisher
+      product   = each.value.marketplace_plan.product
     }
   }
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_linux.id]
   }
 }
@@ -178,9 +178,9 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   for_each           = { for disk in local.data_disk_config : "${disk.disk_name}-${disk.vm_name}" => disk }
   managed_disk_id    = azurerm_managed_disk.alz_linux[each.key].id # lookup the correct managed disk ID's using the combo of disk name and vm name
   virtual_machine_id = azurerm_linux_virtual_machine.alz_linux[each.value.vm_name].id
- # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
-  lun                = each.value.lun
-  caching            = "ReadWrite"
+  # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
+  lun     = each.value.lun
+  caching = "ReadWrite"
 }
 
 # Configure the backup in the RSV deployed in spoke if selected
@@ -195,14 +195,14 @@ resource "azurerm_backup_protected_vm" "alz_linux" {
 
 # Install Azure monitor agent and associate it to a data collection rule
 resource "azurerm_virtual_machine_extension" "alz_linux_ama" {
-  for_each             = { for k, v in local.vm_specifications : k => k if v.monitor }
-  name                 = "AzureMonitorAgent"
-  virtual_machine_id   = azurerm_linux_virtual_machine.alz_linux[each.key].id
-  publisher            = "Microsoft.Azure.Monitor"
-  type                 = "AzureMonitorLinuxAgent"
-  type_handler_version = "1.9"
+  for_each                   = { for k, v in local.vm_specifications : k => k if v.monitor }
+  name                       = "AzureMonitorAgent"
+  virtual_machine_id         = azurerm_linux_virtual_machine.alz_linux[each.key].id
+  publisher                  = "Microsoft.Azure.Monitor"
+  type                       = "AzureMonitorLinuxAgent"
+  type_handler_version       = "1.9"
   auto_upgrade_minor_version = true
-  settings             = <<SETTINGS
+  settings                   = <<SETTINGS
     {
       "authentication": {
         "managedidentity": {
