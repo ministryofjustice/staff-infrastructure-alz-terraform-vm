@@ -8,7 +8,7 @@ locals {
       sku                   = "2016-Datacenter"
       version               = "latest"
       admin_user            = "azureuser"
-      provision_vm_agent    = "true"
+      provision_vm_agent    = true
       patch_mode            = "AutomaticByPlatform"
       patch_assessment_mode = "AutomaticByPlatform"
       scheduled_shutdown    = true
@@ -56,7 +56,7 @@ locals {
       sku                   = "16.04-LTS"
       version               = "latest"
       admin_user            = "azureuser"
-      provision_vm_agent    = "true"
+      provision_vm_agent    = true
       patch_mode            = "AutomaticByPlatform"
       patch_assessment_mode = "AutomaticByPlatform"
       scheduled_shutdown    = false

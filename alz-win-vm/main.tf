@@ -45,7 +45,7 @@ locals {
     backup                = false
     enable_av             = false
     enable_host_enc       = false
-    provision_vm_agent    = "true"
+    provision_vm_agent    = true
     patch_mode            = "AutomaticByPlatform"
     patch_assessment_mode = "AutomaticByPlatform"
   })
