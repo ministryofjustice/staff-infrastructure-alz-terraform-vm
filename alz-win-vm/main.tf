@@ -122,6 +122,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   patch_mode                 = each.value.patch_mode
   patch_assessment_mode      = each.value.patch_assessment_mode
   provision_vm_agent         = each.value.provision_vm_agent
+  BypassPlatformSafetyChecksOnUserSchedule = each.value.BypassPlatformSafetyChecksOnUserSchedule
 
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
