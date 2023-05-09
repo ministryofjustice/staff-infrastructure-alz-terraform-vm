@@ -11,7 +11,7 @@ locals {
       provision_vm_agent    = true
       patch_mode            = "AutomaticByPlatform"
       patch_assessment_mode = "AutomaticByPlatform"
-      BypassPlatformSafetyChecksOnUserSchedule = false
+      BypassPlatformSafetyChecksOnUserSchedule = true
       scheduled_shutdown    = true
       monitor               = true
       enable_av             = true
@@ -60,7 +60,7 @@ locals {
       provision_vm_agent    = true
       patch_mode            = "AutomaticByPlatform"
       patch_assessment_mode = "AutomaticByPlatform"
-      BypassPlatformSafetyChecksOnUserSchedule = false
+      BypassPlatformSafetyChecksOnUserSchedule = true
       scheduled_shutdown    = false
       monitor               = false
       backup                = false
