@@ -100,19 +100,19 @@ resource "azurerm_network_interface" "alz_linux" {
 
 # Using Linux Machine Resource
 resource "azurerm_linux_virtual_machine" "alz_linux" {
-  for_each                        = local.vm_specifications
-  name                            = each.key
-  location                        = data.azurerm_resource_group.alz_linux.location
-  resource_group_name             = data.azurerm_resource_group.alz_linux.name
-  size                            = each.value.vm_size
-  admin_username                  = each.value.admin_user
-  disable_password_authentication = false
-  admin_password                  = random_password.alz_linux[each.key].result
-  computer_name                   = each.key # remember this can only be 15 characters max
-  encryption_at_host_enabled      = each.value.enable_host_enc
-  patch_mode                      = each.value.patch_mode
-  patch_assessment_mode           = each.value.patch_assessment_mode
-  provision_vm_agent              = each.value.provision_vm_agent
+  for_each                                 = local.vm_specifications
+  name                                     = each.key
+  location                                 = data.azurerm_resource_group.alz_linux.location
+  resource_group_name                      = data.azurerm_resource_group.alz_linux.name
+  size                                     = each.value.vm_size
+  admin_username                           = each.value.admin_user
+  disable_password_authentication          = false
+  admin_password                           = random_password.alz_linux[each.key].result
+  computer_name                            = each.key # remember this can only be 15 characters max
+  encryption_at_host_enabled               = each.value.enable_host_enc
+  patch_mode                               = each.value.patch_mode
+  patch_assessment_mode                    = each.value.patch_assessment_mode
+  provision_vm_agent                       = each.value.provision_vm_agent
   BypassPlatformSafetyChecksOnUserSchedule = each.value.BypassPlatformSafetyChecksOnUserSchedule
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
