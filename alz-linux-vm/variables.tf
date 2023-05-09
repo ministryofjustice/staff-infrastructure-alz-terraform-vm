@@ -20,6 +20,7 @@ variable "vm_specifications" {
     patch_class           = optional(string)
     patch_mode            = optional(string)
     patch_assessment_mode = optional(string)
+    BypassPlatformSafetyChecksOnUserSchedule = optional(bool)
     provision_vm_agent    = optional(bool)
     scheduled_shutdown    = optional(bool)
     monitor               = optional(bool)
