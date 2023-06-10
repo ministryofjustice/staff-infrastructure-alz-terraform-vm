@@ -1,19 +1,19 @@
 locals {
   vm_specifications_win = {
     vm-test-win-01 = {
-      vm_size               = "Standard_D3_v2"
-      zone                  = "1"
-      publisher             = "MicrosoftWindowsServer"
-      offer                 = "WindowsServer"
-      sku                   = "2016-Datacenter"
-      version               = "latest"
-      admin_user            = "azureuser"
-      provision_vm_agent    = true
-      patch_mode            = "CustomerManaged"
-      scheduled_shutdown    = true
-      monitor               = true
-      enable_av             = true
-      backup                = false
+      vm_size            = "Standard_D3_v2"
+      zone               = "1"
+      publisher          = "MicrosoftWindowsServer"
+      offer              = "WindowsServer"
+      sku                = "2016-Datacenter"
+      version            = "latest"
+      admin_user         = "azureuser"
+      provision_vm_agent = true
+      patch_mode         = "CustomerManaged"
+      scheduled_shutdown = true
+      monitor            = true
+      enable_av          = true
+      backup             = false
 
       network = {
         nic-mgmt = {
@@ -48,18 +48,18 @@ locals {
 
   vm_specifications_linux = {
     vm-test-nix-01 = {
-      vm_size               = "Standard_D3_v2"
-      zone                  = "1"
-      publisher             = "Canonical"
-      offer                 = "UbuntuServer"
-      sku                   = "16.04-LTS"
-      version               = "latest"
-      admin_user            = "azureuser"
-      provision_vm_agent    = true
-      patch_mode            = "CustomerManaged"
-      scheduled_shutdown    = false
-      monitor               = false
-      backup                = false
+      vm_size            = "Standard_D3_v2"
+      zone               = "1"
+      publisher          = "Canonical"
+      offer              = "UbuntuServer"
+      sku                = "16.04-LTS"
+      version            = "latest"
+      admin_user         = "azureuser"
+      provision_vm_agent = true
+      patch_mode         = "CustomerManaged"
+      scheduled_shutdown = false
+      monitor            = false
+      backup             = false
 
       network = {
         nic-mgmt = {
