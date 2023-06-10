@@ -9,8 +9,8 @@ locals {
       version               = "latest"
       admin_user            = "azureuser"
       provision_vm_agent    = true
-      patch_mode            = "AutomaticByPlatform"
-      patch_assessment_mode = "AutomaticByPlatform"
+      patch_mode            = "CustomerManaged"
+      patch_assessment_mode = "Manual"
       scheduled_shutdown    = true
       monitor               = true
       enable_av             = true
@@ -57,8 +57,8 @@ locals {
       version               = "latest"
       admin_user            = "azureuser"
       provision_vm_agent    = true
-      patch_mode            = "AutomaticByPlatform"
-      patch_assessment_mode = "AutomaticByPlatform"
+      patch_mode            = "CustomerManaged"
+      patch_assessment_mode = "Manual"
       scheduled_shutdown    = false
       monitor               = false
       backup                = false
