@@ -189,7 +189,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
 # Configure the backup in the RSV deployed in spoke if selected
 resource "azurerm_backup_protected_vm" "alz_win" {
   # Loop through and setup backup in RSV for VM objects that have "backup" set to true
-  for_each            = { for k, v in local.vm_specifications : k => k if v.backup }
+  for_each            = { for k, v in local.vm_specifications : k => v if v.backup }
   resource_group_name = var.recovery_vault_resource_group
   recovery_vault_name = var.recovery_vault_name
   backup_policy_id    = data.azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr[0].id # indexed because data source uses a count toggle
@@ -201,12 +201,13 @@ resource "azurerm_backup_protected_vm" "alz_win" {
 # Antivirus
 resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   depends_on                 = [time_sleep.wait_30_seconds] # See README
-  for_each                   = { for k, v in local.vm_specifications : k => k if v.enable_av }
+  for_each                   = { for k, v in local.vm_specifications : k => v if v.enable_av }
   name                       = "IaaSAntimalware"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.Azure.Security"
   type                       = "IaaSAntimalware"
   type_handler_version       = "1.1"
+  tags                       = each.value.tags
   auto_upgrade_minor_version = "true"
   settings                   = <<SETTINGS
   {
@@ -229,13 +230,14 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
 
 # Install Azure monitor agent and associate it to a data collection rule
 resource "azurerm_virtual_machine_extension" "alz_win_ama" {
-  for_each                   = { for k, v in local.vm_specifications : k => k if v.monitor }
+  for_each                   = { for k, v in local.vm_specifications : k => v if v.monitor }
   name                       = "AzureMonitorAgent"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.Azure.Monitor"
   type                       = "AzureMonitorWindowsAgent"
   type_handler_version       = "1.9"
   auto_upgrade_minor_version = true
+  tags                       = each.value.tags
   settings                   = <<SETTINGS
     {
       "authentication": {
@@ -248,9 +250,39 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
     SETTINGS
 }
 
+# Also install "old" Log Analytics agent (extension called MicrosoftMonitoringAgent...) required to collect Change Tracking info
+# This ultimately allows collection of data on Files, Services and Registry key changes so alerts can be created based on this
+# This shouldn't have been required as this functionality is baked into the AMA installed above but it currently doesn't work...
+# Confirmed with MS this should be fixed when it comes into General Availability 
+resource "azurerm_virtual_machine_extension" "alz_win_mma" {
+  for_each                   = { for k, v in local.vm_specifications : k => v if v.monitor }
+  name                       = "MicrosoftMonitoringAgent"
+  virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
+  publisher                  = "Microsoft.EnterpriseCloud.Monitoring"
+  type                       = "MicrosoftMonitoringAgent"
+  type_handler_version       = "1.0"
+  auto_upgrade_minor_version = true
+
+  settings = <<-BASE_SETTINGS
+  {
+    "azureResourceId" : "${azurerm_windows_virtual_machine.alz_win[each.key].id}",
+    "stopOnMultipleConnections" : true,
+    "workspaceId" : "${data.azurerm_log_analytics_workspace.core_spoke[0].workspace_id}"
+  }
+  BASE_SETTINGS
+
+  protected_settings = <<-PROTECTED_SETTINGS
+  {
+    "workspaceKey" : "${data.azurerm_log_analytics_workspace.core_spoke[0].primary_shared_key}"
+  }
+  PROTECTED_SETTINGS
+
+  tags = each.value.tags
+}
+
 # associate to a Data Collection Rule
 resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
-  for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
+  for_each                = { for k, v in local.vm_specifications : k => v if v.monitor }
   name                    = azurerm_windows_virtual_machine.alz_win[each.key].name
   target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
   data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id
@@ -262,6 +294,6 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
 # This is an attempt to workaround these in the short term until this issue is closed
 
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [azurerm_virtual_machine_extension.alz_win_ama]
+  depends_on = [azurerm_virtual_machine_extension.alz_win_ama, azurerm_virtual_machine_extension.alz_win_mma]
   create_duration = "30s"
 }
