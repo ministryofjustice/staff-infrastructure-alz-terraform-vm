@@ -36,16 +36,18 @@ locals {
   # Set some defaults for our VM spec
 
   vm_specifications = defaults(var.vm_specifications, {
-    os_disk_type       = "Standard_LRS"
-    marketplace_image  = false
-    admin_user         = "azureuser"
-    patch_class        = "none"
-    license_type       = "None"
-    scheduled_shutdown = false
-    monitor            = false
-    backup             = false
-    enable_av          = false
-    enable_host_enc    = false
+    os_disk_type          = "Standard_LRS"
+    marketplace_image     = false
+    admin_user            = "azureuser"
+    license_type          = "None"
+    scheduled_shutdown    = false
+    monitor               = false
+    backup                = false
+    enable_av             = false
+    enable_host_enc       = false
+    provision_vm_agent    = true
+    patch_mode            = "AutomaticByPlatform"
+    patch_assessment_mode = "AutomaticByPlatform"
   })
 
 }
@@ -117,11 +119,14 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   computer_name              = each.key # remember this can only be 15 characters max
   encryption_at_host_enabled = each.value.enable_host_enc
   license_type               = each.value.license_type
+  patch_mode                 = each.value.patch_mode
+  patch_assessment_mode      = each.value.patch_assessment_mode
+  provision_vm_agent         = each.value.provision_vm_agent
+
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
     {
-      "UpdateClass"        = each.value.patch_class
       "scheduled_shutdown" = each.value.scheduled_shutdown ? "true" : "false"
   })
 
@@ -151,9 +156,9 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   dynamic "plan" {
     for_each = each.value.marketplace_image ? [1] : []
     content {
-      name       = each.value.marketplace_plan.name
-      publisher  = each.value.marketplace_plan.publisher
-      product    = each.value.marketplace_plan.product
+      name      = each.value.marketplace_plan.name
+      publisher = each.value.marketplace_plan.publisher
+      product   = each.value.marketplace_plan.product
     }
   }
 
@@ -182,8 +187,8 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   managed_disk_id    = azurerm_managed_disk.alz_win[each.key].id # lookup the correct managed disk ID's using the combo of disk name and vm name
   virtual_machine_id = azurerm_windows_virtual_machine.alz_win[each.value.vm_name].id
   # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
-  lun                = each.value.lun                
-  caching            = "ReadWrite"
+  lun     = each.value.lun
+  caching = "ReadWrite"
 }
 
 # Configure the backup in the RSV deployed in spoke if selected
@@ -262,6 +267,6 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
 # This is an attempt to workaround these in the short term until this issue is closed
 
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [azurerm_virtual_machine_extension.alz_win_ama]
+  depends_on      = [azurerm_virtual_machine_extension.alz_win_ama]
   create_duration = "30s"
 }
