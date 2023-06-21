@@ -34,5 +34,6 @@ module "windows_vm_tests" {
   keyvault_rg                                 = "rg-alz-vm-test-001"
   data_collection_rule_monitor_name           = "dcr-alz-vm-test-001"
   data_collection_rule_monitor_resource_group = "rg-alz-vm-test-001"
+  log_analytics_workspace_name                = "log-alz-vm-test-001"
   providers                                   = { azurerm = azurerm.spoke }
 }

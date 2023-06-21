@@ -63,6 +63,11 @@ variable "data_collection_rule_monitor_resource_group" {
   default     = null
 }
 
+variable "log_analytics_workspace_name" {
+  description = "Log analytics workspace to connect the MMA agent to. Not used on Linux version of this module."
+  type        = string
+  default     = null
+}
 
 variable "keyvault_name" {
   description = "User account credentials are generated and pushed here"
