@@ -200,7 +200,7 @@ resource "azurerm_backup_protected_vm" "alz_win" {
 
 # Antivirus
 resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
-  depends_on                 = [time_sleep.wait_30_seconds] # See README
+  depends_on                 = [time_sleep.wait_30_seconds_ama] # See README
   for_each                   = { for k, v in local.vm_specifications : k => v if v.enable_av }
   name                       = "IaaSAntimalware"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
@@ -256,6 +256,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
 # Confirmed with MS this should be fixed when it comes into General Availability 
 resource "azurerm_virtual_machine_extension" "alz_win_mma" {
   for_each                   = { for k, v in local.vm_specifications : k => v if v.monitor }
+  depends_on                 = [time_sleep.wait_30_seconds_av] # See README
   name                       = "MicrosoftMonitoringAgent"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.EnterpriseCloud.Monitoring"
@@ -298,8 +299,8 @@ resource "time_sleep" "wait_30_seconds_ama" {
   create_duration = "30s"
 }
 
-resource "time_sleep" "wait_30_seconds_mma" {
-  depends_on = [azurerm_virtual_machine_extension.alz_win_mma]
+resource "time_sleep" "wait_30_seconds_av" {
+  depends_on = [azurerm_virtual_machine_extension.alz_win_antivirus]
   create_duration = "30s"
 }
 
