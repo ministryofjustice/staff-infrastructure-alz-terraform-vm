@@ -36,3 +36,9 @@ data "azurerm_monitor_data_collection_rule" "azure_monitor" {
   name                = var.data_collection_rule_monitor_name
   resource_group_name = var.data_collection_rule_monitor_resource_group
 }
+
+data "azurerm_log_analytics_workspace" "core_spoke" {
+  count               = var.log_analytics_workspace_name != null ? 1 : 0
+  name                = var.log_analytics_workspace_name
+  resource_group_name = var.data_collection_rule_monitor_resource_group
+}
