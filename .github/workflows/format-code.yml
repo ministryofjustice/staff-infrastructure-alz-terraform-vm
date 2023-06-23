@@ -8,7 +8,7 @@ jobs:
   format-code:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.3
       - uses: ministryofjustice/github-actions/code-formatter@v12
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
