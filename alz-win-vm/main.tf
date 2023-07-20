@@ -40,7 +40,6 @@ locals {
     os_disk_type       = "Standard_LRS"
     marketplace_image  = false
     admin_user         = "azureuser"
-    patch_class        = "none"
     license_type       = "None"
     scheduled_shutdown = false
     monitor            = false
