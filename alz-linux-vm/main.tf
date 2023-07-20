@@ -118,7 +118,6 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
     {
-      "UpdateClass"                    = each.value.patch_class
       "prometheusAzureVirtualMachines" = each.value.monitor ? "tomonitor" : "notmonitored"
       "scheduled_shutdown"             = each.value.scheduled_shutdown ? "true" : "false"
   })
