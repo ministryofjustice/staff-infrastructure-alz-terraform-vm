@@ -46,7 +46,7 @@ stages:
       workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/infra-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
-      terraformVersion: 1.3.0
+      terraformVersion: 1.2.6
 
   - template: azdo/template-terraform-deploy-stage.yml@templates
     parameters:
@@ -64,7 +64,7 @@ stages:
       workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/vm-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
-      terraformVersion: 1.3.0
+      terraformVersion: 1.2.6
       dependsOn: [deploy_inf]
 
   # Note that working dirs in this stage are different as they don't checkout the CI templates repo.
@@ -104,7 +104,7 @@ stages:
       workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/vm-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
-      terraformVersion: 1.3.0
+      terraformVersion: 1.2.6
       dependsOn: [test]
 
   - template: azdo/template-terraform-destroy-stage.yml@templates
@@ -122,5 +122,5 @@ stages:
       workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/infra-build"
       yamlenv: "pr_exclusivelock"
       applyTfChanges: true
-      terraformVersion: 1.3.0
+      terraformVersion: 1.2.6
       dependsOn: [test, destroy_vms]
