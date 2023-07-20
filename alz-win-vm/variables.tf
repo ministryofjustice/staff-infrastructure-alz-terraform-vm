@@ -27,12 +27,12 @@ variable "vm_specifications" {
     license_type          = optional(string)
 
     network = map(object({
-      vnet                = string
-      vnet_resource_group = string
-      subnet              = string
-      ip_address          = string
-      public_ip_id        = optional(string)
-      custom_dns_servers  = optional(list(string))
+      vnet                          = string
+      vnet_resource_group           = string
+      subnet                        = string
+      ip_address                    = string
+      public_ip_id                  = optional(string)
+      custom_dns_servers            = optional(list(string))
       enable_accelerated_networking = optional(bool, false)
     }))
     data_disks = map(object({
