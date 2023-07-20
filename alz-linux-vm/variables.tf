@@ -17,7 +17,6 @@ variable "vm_specifications" {
     version               = string
     os_disk_type          = optional(string)
     admin_user            = string
-    patch_class           = optional(string)
     patch_mode            = optional(string)
     patch_assessment_mode = optional(string)
     provision_vm_agent    = optional(bool)
