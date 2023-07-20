@@ -155,9 +155,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
       name      = each.value.marketplace_plan.name
       publisher = each.value.marketplace_plan.publisher
       product   = each.value.marketplace_plan.product
-      name      = each.value.marketplace_plan.name
-      publisher = each.value.marketplace_plan.publisher
-      product   = each.value.marketplace_plan.product
     }
   }
 
@@ -186,8 +183,6 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   managed_disk_id    = azurerm_managed_disk.alz_win[each.key].id # lookup the correct managed disk ID's using the combo of disk name and vm name
   virtual_machine_id = azurerm_windows_virtual_machine.alz_win[each.value.vm_name].id
   # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
-  lun     = each.value.lun
-  caching = "ReadWrite"
   lun     = each.value.lun
   caching = "ReadWrite"
 }
