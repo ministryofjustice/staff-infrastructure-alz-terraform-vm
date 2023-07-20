@@ -32,12 +32,15 @@ No modules.
 | [azurerm_virtual_machine_data_disk_attachment.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment) | resource |
 | [azurerm_virtual_machine_extension.alz_win_ama](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
 | [azurerm_virtual_machine_extension.alz_win_antivirus](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
+| [azurerm_virtual_machine_extension.alz_win_mma](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
 | [azurerm_windows_virtual_machine.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine) | resource |
 | [random_password.alz_win](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_string.alz_win_identity](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [time_sleep.wait_30_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_30_seconds_ama](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_30_seconds_av](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/backup_policy_vm) | data source |
 | [azurerm_key_vault.core_spoke_keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
+| [azurerm_log_analytics_workspace.core_spoke](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/log_analytics_workspace) | data source |
 | [azurerm_monitor_data_collection_rule.azure_monitor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/monitor_data_collection_rule) | data source |
 | [azurerm_resource_group.alz_win](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 | [azurerm_storage_account.spoke_log_diag_sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account) | data source |
@@ -51,6 +54,7 @@ No modules.
 | <a name="input_data_collection_rule_monitor_resource_group"></a> [data\_collection\_rule\_monitor\_resource\_group](#input\_data\_collection\_rule\_monitor\_resource\_group) | Resource group that contains the data collection rule used for Azure monitor agent data streams | `string` | `null` | no |
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | User account credentials are generated and pushed here | `string` | n/a | yes |
 | <a name="input_keyvault_rg"></a> [keyvault\_rg](#input\_keyvault\_rg) | Keyvault for credential storage Resource Group | `string` | n/a | yes |
+| <a name="input_log_analytics_workspace_name"></a> [log\_analytics\_workspace\_name](#input\_log\_analytics\_workspace\_name) | Log analytics workspace to connect the MMA agent to | `string` | `null` | no |
 | <a name="input_recovery_vault_name"></a> [recovery\_vault\_name](#input\_recovery\_vault\_name) | Vault used for backups - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
 | <a name="input_recovery_vault_resource_group"></a> [recovery\_vault\_resource\_group](#input\_recovery\_vault\_resource\_group) | Vault resource group - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Resource group to create the Virtual Machine(s) in | `string` | n/a | yes |

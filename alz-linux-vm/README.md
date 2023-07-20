@@ -48,6 +48,7 @@ No modules.
 | <a name="input_data_collection_rule_monitor_resource_group"></a> [data\_collection\_rule\_monitor\_resource\_group](#input\_data\_collection\_rule\_monitor\_resource\_group) | Resource group that contains the data collection rule used for Azure monitor agent data streams | `string` | `null` | no |
 | <a name="input_keyvault_name"></a> [keyvault\_name](#input\_keyvault\_name) | User account credentials are generated and pushed here | `string` | n/a | yes |
 | <a name="input_keyvault_rg"></a> [keyvault\_rg](#input\_keyvault\_rg) | Keyvault for credential storage Resource Group | `string` | n/a | yes |
+| <a name="input_log_analytics_workspace_name"></a> [log\_analytics\_workspace\_name](#input\_log\_analytics\_workspace\_name) | Log analytics workspace to connect the MMA agent to. Not used on Linux version of this module. | `string` | `null` | no |
 | <a name="input_recovery_vault_name"></a> [recovery\_vault\_name](#input\_recovery\_vault\_name) | Vault used for backups - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
 | <a name="input_recovery_vault_resource_group"></a> [recovery\_vault\_resource\_group](#input\_recovery\_vault\_resource\_group) | Vault resource group - - must be provided if any VM specifies 'backup' = 'true' | `string` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Resource group to create the Virtual Machine(s) in | `string` | n/a | yes |
