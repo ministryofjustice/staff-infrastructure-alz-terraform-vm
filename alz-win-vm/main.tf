@@ -12,6 +12,7 @@ locals {
         pip_id      = nic.public_ip_id
         dns_servers = nic.custom_dns_servers
         vnet_rg     = nic.vnet_resource_group
+        enable_accelerated_networking = nic.enable_accelerated_networking
         tags        = vm.tags
       }
     ]
@@ -94,6 +95,7 @@ resource "azurerm_network_interface" "alz_win" {
   resource_group_name = data.azurerm_resource_group.alz_win.name
   tags                = each.value.tags
   dns_servers         = each.value.dns_servers
+  enable_accelerated_networking = each.value.enable_accelerated_networking
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"
