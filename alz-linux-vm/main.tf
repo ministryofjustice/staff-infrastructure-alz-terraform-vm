@@ -12,7 +12,7 @@ locals {
         pip_id                        = nic.public_ip_id
         dns_servers                   = nic.custom_dns_servers
         vnet_rg                       = nic.vnet_resource_group
-        enable_accelerated_networking = coalesce(nic.enable_accelerated_networking, false)  # Set the default value to false
+        enable_accelerated_networking = coalesce(nic.enable_accelerated_networking, false) # Set the default value to false
         tags                          = vm.tags
       }
     ]
