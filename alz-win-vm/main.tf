@@ -4,15 +4,16 @@ locals {
   nic_config = flatten([
     for vm_key, vm in var.vm_specifications : [
       for nic_key, nic in vm.network : {
-        vm_name     = vm_key
-        nic         = nic_key
-        vnet        = nic.vnet
-        subnet      = nic.subnet
-        ip          = nic.ip_address
-        pip_id      = nic.public_ip_id
-        dns_servers = nic.custom_dns_servers
-        vnet_rg     = nic.vnet_resource_group
-        tags        = vm.tags
+        vm_name                       = vm_key
+        nic                           = nic_key
+        vnet                          = nic.vnet
+        subnet                        = nic.subnet
+        ip                            = nic.ip_address
+        pip_id                        = nic.public_ip_id
+        dns_servers                   = nic.custom_dns_servers
+        vnet_rg                       = nic.vnet_resource_group
+        enable_accelerated_networking = coalesce(nic.enable_accelerated_networking, false) # Set the default value to false
+        tags                          = vm.tags
       }
     ]
   ])
@@ -36,15 +37,15 @@ locals {
   # Set some defaults for our VM spec
 
   vm_specifications = defaults(var.vm_specifications, {
-    os_disk_type          = "Standard_LRS"
-    marketplace_image     = false
-    admin_user            = "azureuser"
-    license_type          = "None"
-    scheduled_shutdown    = false
-    monitor               = false
-    backup                = false
-    enable_av             = false
-    enable_host_enc       = false
+    os_disk_type       = "Standard_LRS"
+    marketplace_image  = false
+    admin_user         = "azureuser"
+    license_type       = "None"
+    scheduled_shutdown = false
+    monitor            = false
+    backup             = false
+    enable_av          = false
+    enable_host_enc    = false
     provision_vm_agent    = true
     patch_mode            = "AutomaticByPlatform"
     patch_assessment_mode = "AutomaticByPlatform"
@@ -67,6 +68,7 @@ resource "azurerm_user_assigned_identity" "alz_win" {
   location            = data.azurerm_resource_group.alz_win.location
   name                = "mi-winvm-${random_string.alz_win_identity.result}"
   resource_group_name = data.azurerm_resource_group.alz_win.name
+  tags                = var.tags
 }
 
 # Generate a password for each VM, then push it to Keyvault
@@ -91,11 +93,12 @@ resource "azurerm_network_interface" "alz_win" {
   for_each = {
     for nic in local.nic_config : "${nic.nic}.${nic.vm_name}" => nic
   }
-  name                = each.key
-  location            = data.azurerm_resource_group.alz_win.location
-  resource_group_name = data.azurerm_resource_group.alz_win.name
-  tags                = each.value.tags
-  dns_servers         = each.value.dns_servers
+  name                          = each.key
+  location                      = data.azurerm_resource_group.alz_win.location
+  resource_group_name           = data.azurerm_resource_group.alz_win.name
+  tags                          = each.value.tags
+  dns_servers                   = each.value.dns_servers
+  enable_accelerated_networking = each.value.enable_accelerated_networking
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"
@@ -122,7 +125,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   patch_mode                 = each.value.patch_mode
   patch_assessment_mode      = each.value.patch_assessment_mode
   provision_vm_agent         = each.value.provision_vm_agent
-
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
@@ -300,12 +302,11 @@ resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
 # This is an attempt to workaround these in the short term until this issue is closed
 
 resource "time_sleep" "wait_30_seconds_ama" {
-  depends_on = [azurerm_virtual_machine_extension.alz_win_ama]
+  depends_on      = [azurerm_virtual_machine_extension.alz_win_ama]
   create_duration = "30s"
 }
 
 resource "time_sleep" "wait_30_seconds_av" {
-  depends_on = [azurerm_virtual_machine_extension.alz_win_antivirus]
+  depends_on      = [azurerm_virtual_machine_extension.alz_win_antivirus]
   create_duration = "30s"
 }
-
