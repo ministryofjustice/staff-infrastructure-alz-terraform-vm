@@ -17,7 +17,6 @@ variable "vm_specifications" {
     version               = string
     os_disk_type          = optional(string)
     admin_user            = string
-    patch_class           = optional(string)
     patch_mode            = optional(string)
     patch_assessment_mode = optional(string)
     provision_vm_agent    = optional(bool)
@@ -27,12 +26,13 @@ variable "vm_specifications" {
     enable_host_enc       = optional(bool)
 
     network = map(object({
-      vnet                = string
-      vnet_resource_group = string
-      subnet              = string
-      ip_address          = string
-      public_ip_id        = optional(string)
-      custom_dns_servers  = optional(list(string))
+      vnet                          = string
+      vnet_resource_group           = string
+      subnet                        = string
+      ip_address                    = string
+      public_ip_id                  = optional(string)
+      custom_dns_servers            = optional(list(string))
+      enable_accelerated_networking = optional(bool)
     }))
     data_disks = map(object({
       size          = number
@@ -93,4 +93,3 @@ variable "recovery_vault_resource_group" {
   type        = string
   default     = null
 }
-
