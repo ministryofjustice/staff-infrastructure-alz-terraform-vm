@@ -61,7 +61,7 @@ resource "azurerm_user_assigned_identity" "alz_linux" {
   location            = data.azurerm_resource_group.alz_linux.location
   name                = "mi-linuxvm-${random_string.alz_linux_identity.result}"
   resource_group_name = data.azurerm_resource_group.alz_linux.name
-  
+
   lifecycle {
     ignore_changes = [
       tags,
