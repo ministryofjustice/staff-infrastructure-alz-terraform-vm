@@ -37,12 +37,12 @@ locals {
   # Set some defaults for our VM spec
 
   vm_specifications = defaults(var.vm_specifications, {
-    marketplace_image  = false
-    os_disk_type       = "Standard_LRS"
-    admin_user         = "azureuser"
-    scheduled_shutdown = false
-    monitor            = false
-    backup             = false
+    marketplace_image     = false
+    os_disk_type          = "Standard_LRS"
+    admin_user            = "azureuser"
+    scheduled_shutdown    = false
+    monitor               = false
+    backup                = false
     provision_vm_agent    = true
     patch_mode            = "AutomaticByPlatform"
     patch_assessment_mode = "AutomaticByPlatform"
