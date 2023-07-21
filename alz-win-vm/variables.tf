@@ -27,12 +27,13 @@ variable "vm_specifications" {
     license_type          = optional(string)
 
     network = map(object({
-      vnet                = string
-      vnet_resource_group = string
-      subnet              = string
-      ip_address          = string
-      public_ip_id        = optional(string)
-      custom_dns_servers  = optional(list(string))
+      vnet                          = string
+      vnet_resource_group           = string
+      subnet                        = string
+      ip_address                    = string
+      public_ip_id                  = optional(string)
+      custom_dns_servers            = optional(list(string))
+      enable_accelerated_networking = optional(bool)
     }))
     data_disks = map(object({
       size          = number
@@ -92,4 +93,16 @@ variable "recovery_vault_resource_group" {
   description = "Vault resource group - must be provided if any VM specifies 'backup' = 'true'"
   type        = string
   default     = null
+}
+
+variable "tags" {
+  description = "Standard tags for ALZ resources"
+  type        = map(string)
+  default = {
+    application  = "Azure-Landing-Zone"
+    businessunit = "HQ"
+    isproduction = "True"
+    owner        = "PTTP Azure Landing Zone Team: PTTP3LSAzure@justice.gov.uk"
+    source-code  = "https://github.com/ministryofjustice/staff-infrastructure-azure-landing-zone"
+  }
 }
