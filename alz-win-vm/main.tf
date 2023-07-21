@@ -65,7 +65,7 @@ resource "azurerm_user_assigned_identity" "alz_win" {
   location            = data.azurerm_resource_group.alz_win.location
   name                = "mi-winvm-${random_string.alz_win_identity.result}"
   resource_group_name = data.azurerm_resource_group.alz_win.name
-  tags = var.tags
+  tags                = var.tags
 }
 
 # Generate a password for each VM, then push it to Keyvault
