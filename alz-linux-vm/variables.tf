@@ -93,15 +93,3 @@ variable "recovery_vault_resource_group" {
   type        = string
   default     = null
 }
-
-variable "tags" {
-  description = "Standard tags for ALZ resources"
-  type        = map(string)
-  default = {
-    application  = "Azure-Landing-Zone"
-    businessunit = "HQ"
-    isproduction = "True"
-    owner        = "PTTP Azure Landing Zone Team: PTTP3LSAzure@justice.gov.uk"
-    source-code  = "https://github.com/ministryofjustice/staff-infrastructure-azure-landing-zone"
-  }
-}
