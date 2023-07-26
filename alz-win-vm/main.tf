@@ -13,6 +13,7 @@ locals {
         dns_servers                   = nic.custom_dns_servers
         vnet_rg                       = nic.vnet_resource_group
         enable_accelerated_networking = coalesce(nic.enable_accelerated_networking, false) # Set the default value to false
+        enable_ip_forwarding          = coalesce(nic.enable_ip_forwarding, false)
         tags                          = vm.tags
       }
     ]
@@ -103,6 +104,7 @@ resource "azurerm_network_interface" "alz_win" {
   tags                          = each.value.tags
   dns_servers                   = each.value.dns_servers
   enable_accelerated_networking = each.value.enable_accelerated_networking
+  enable_ip_forwarding          = each.value.enable_ip_forwarding
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"

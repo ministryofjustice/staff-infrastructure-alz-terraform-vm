@@ -23,6 +23,7 @@ locals {
           subnet                        = "snet-alz-vm-test-001"
           ip_address                    = "192.168.99.5"
           enable_accelerated_networking = true
+          enable_ip_forwarding          = true
         }
       }
 
@@ -71,6 +72,7 @@ locals {
           subnet                        = "snet-alz-vm-test-001"
           ip_address                    = "192.168.99.6"
           enable_accelerated_networking = true
+          enable_ip_forwarding          = true
         }
       }
 
