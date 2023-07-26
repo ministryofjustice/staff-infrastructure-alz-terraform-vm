@@ -34,6 +34,7 @@ variable "vm_specifications" {
       public_ip_id                  = optional(string)
       custom_dns_servers            = optional(list(string))
       enable_accelerated_networking = optional(bool)
+      ip_forwarding                 = optional(bool)
     }))
     data_disks = map(object({
       size          = number
