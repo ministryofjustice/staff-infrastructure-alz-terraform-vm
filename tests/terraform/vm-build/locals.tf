@@ -15,6 +15,11 @@ locals {
       monitor               = true
       enable_av             = true
       backup                = false
+      antimalware_exclusions = {
+        Extensions = ".jpeg"
+        Paths      = "C:\\Windows\\debug"
+        Processes  = "vssvc.exe"
+      }
 
       network = {
         nic-mgmt = {

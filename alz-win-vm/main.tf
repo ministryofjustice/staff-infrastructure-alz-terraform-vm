@@ -51,7 +51,6 @@ locals {
     patch_mode            = "AutomaticByPlatform"
     patch_assessment_mode = "AutomaticByPlatform"
   })
-
 }
 
 # Create a managed identity - this is shared between all VM's created per module call
@@ -219,26 +218,25 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.Azure.Security"
   type                       = "IaaSAntimalware"
-  type_handler_version       = "1.1"
+  type_handler_version       = "1.7"
   tags                       = each.value.tags
   auto_upgrade_minor_version = "true"
-  settings                   = <<SETTINGS
-  {
-    "AntimalwareEnabled": true,
-    "RealtimeProtectionEnabled": "true",
-    "ScheduledScanSettings": {
-        "isEnabled": "true",
-        "day": "7",
-        "time": "120",
-        "scanType": "Quick"
+  settings = jsonencode({
+    AntimalwareEnabled        = true,
+    RealtimeProtectionEnabled = "true",
+    ScheduledScanSettings = {
+      isEnabled = "true",
+      day       = "7",
+      time      = "120",
+      scanType  = "Quick"
     },
-    "Exclusions": {
-        "Extensions": "",
-        "Paths": "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database",
-        "Processes": "NTUser.dat*"
-     }
-  }
-  SETTINGS
+    Exclusions = lookup(local.vm_specifications[each.key], "antimalware_exclusions", {
+      Extensions = ""
+      Paths      = "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database"
+      Processes  = "NTUser.dat*"
+    })
+  })
+
 }
 
 # Install Azure monitor agent and associate it to a data collection rule

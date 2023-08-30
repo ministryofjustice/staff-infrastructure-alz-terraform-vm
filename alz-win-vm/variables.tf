@@ -25,6 +25,11 @@ variable "vm_specifications" {
     enable_host_enc       = optional(bool)
     enable_av             = optional(bool)
     license_type          = optional(string)
+    antimalware_exclusions = optional(object({
+      Extensions = optional(string)
+      Paths      = optional(string)
+      Processes  = optional(string)
+    }))
 
     network = map(object({
       vnet                          = string
