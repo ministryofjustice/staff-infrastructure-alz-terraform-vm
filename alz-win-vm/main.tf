@@ -222,20 +222,20 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   tags                       = each.value.tags
   auto_upgrade_minor_version = "true"
   settings = jsonencode({
-  AntimalwareEnabled = true,
-  RealtimeProtectionEnabled = "true",
-  ScheduledScanSettings = {
-    isEnabled = "true",
-    day       = "7",
-    time      = "120",
-    scanType  = "Quick"
-  },
-  Exclusions = lookup(local.vm_specifications[each.key], "antimalware_exclusions", {
-    Extensions = ""
-    Paths      = "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database"
-    Processes  = "NTUser.dat*"
+    AntimalwareEnabled        = true,
+    RealtimeProtectionEnabled = "true",
+    ScheduledScanSettings = {
+      isEnabled = "true",
+      day       = "7",
+      time      = "120",
+      scanType  = "Quick"
+    },
+    Exclusions = lookup(local.vm_specifications[each.key], "antimalware_exclusions", {
+      Extensions = ""
+      Paths      = "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database"
+      Processes  = "NTUser.dat*"
+    })
   })
-})
 
 }
 
