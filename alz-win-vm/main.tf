@@ -51,10 +51,10 @@ locals {
     patch_mode            = "AutomaticByPlatform"
     patch_assessment_mode = "AutomaticByPlatform"
     antimalware_exclusions = {
-    Extensions = ""
-    Paths      = "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database"
-    Processes  = "NTUser.dat*"
-  }
+      Extensions = ""
+      Paths      = "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database"
+      Processes  = "NTUser.dat*"
+    }
   })
 
 }
@@ -228,16 +228,16 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   tags                       = each.value.tags
   auto_upgrade_minor_version = "true"
   settings = jsonencode({
-    AntimalwareEnabled = true,
+    AntimalwareEnabled        = true,
     RealtimeProtectionEnabled = "true",
     ScheduledScanSettings = {
       isEnabled = "true",
       day       = "7",
       time      = "120",
       scanType  = "Quick"
-  },
-  Exclusions = local.vm_specifications[each.key].antimalware_exclusions
-})
+    },
+    Exclusions = local.vm_specifications[each.key].antimalware_exclusions
+  })
 }
 
 # Install Azure monitor agent and associate it to a data collection rule
