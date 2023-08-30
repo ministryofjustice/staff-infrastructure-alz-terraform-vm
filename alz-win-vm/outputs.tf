@@ -18,3 +18,7 @@ output "nics" {
     for k, v in azurerm_network_interface.alz_win : k => v.id
   }
 }
+
+output "debug_vm_specifications" {
+  value = local.vm_specifications
+}
