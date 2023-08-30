@@ -16,8 +16,8 @@ locals {
       enable_av             = true
       backup                = false
       antimalware_exclusions = {
-        Extensions = ".log"
-        Paths      = "C:\\Windows\\System32"
+        Extensions = ".jpeg"
+        Paths      = "C:\\Windows\\debug"
         Processes  = "vssvc.exe"
       }
 
