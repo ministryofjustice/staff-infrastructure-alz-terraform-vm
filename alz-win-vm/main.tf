@@ -44,7 +44,6 @@ locals {
     license_type          = "None"
     scheduled_shutdown    = false
     monitor               = false
-    backup                = false
     enable_av             = false
     enable_host_enc       = false
     provision_vm_agent    = true
@@ -196,16 +195,6 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
   lun     = each.value.lun
   caching = "ReadWrite"
-}
-
-# Configure the backup in the RSV deployed in spoke if selected
-resource "azurerm_backup_protected_vm" "alz_win" {
-  # Loop through and setup backup in RSV for VM objects that have "backup" set to true
-  for_each            = { for k, v in local.vm_specifications : k => v if v.backup }
-  resource_group_name = var.recovery_vault_resource_group
-  recovery_vault_name = var.recovery_vault_name
-  backup_policy_id    = data.azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr[0].id # indexed because data source uses a count toggle
-  source_vm_id        = azurerm_windows_virtual_machine.alz_win[each.key].id
 }
 
 # VM Extensions
