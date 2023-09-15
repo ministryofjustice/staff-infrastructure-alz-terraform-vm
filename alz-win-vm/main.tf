@@ -37,19 +37,19 @@ locals {
 
   # Set some defaults for our VM spec
 
-  vm_specifications = defaults(var.vm_specifications, {
-    os_disk_type          = "Standard_LRS"
-    marketplace_image     = false
-    admin_user            = "azureuser"
-    license_type          = "None"
-    scheduled_shutdown    = false
-    monitor               = false
-    enable_av             = false
-    enable_host_enc       = false
-    provision_vm_agent    = true
-    patch_mode            = "AutomaticByPlatform"
-    patch_assessment_mode = "AutomaticByPlatform"
-  })
+  # vm_specifications = defaults(var.vm_specifications, {
+  #   os_disk_type          = "Standard_LRS"
+  #   marketplace_image     = false
+  #   admin_user            = "azureuser"
+  #   license_type          = "None"
+  #   scheduled_shutdown    = false
+  #   monitor               = false
+  #   enable_av             = false
+  #   enable_host_enc       = false
+  #   provision_vm_agent    = true
+  #   patch_mode            = "AutomaticByPlatform"
+  #   patch_assessment_mode = "AutomaticByPlatform"
+  # })
 }
 
 # Create a managed identity - this is shared between all VM's created per module call
@@ -76,7 +76,7 @@ resource "azurerm_user_assigned_identity" "alz_win" {
 
 # Generate a password for each VM, then push it to Keyvault
 resource "random_password" "alz_win" {
-  for_each         = local.vm_specifications
+  for_each         = var.vm_specifications
   length           = 16
   special          = true
   min_numeric      = 1
@@ -86,7 +86,7 @@ resource "random_password" "alz_win" {
 }
 
 resource "azurerm_key_vault_secret" "alz_win_passwords" {
-  for_each     = local.vm_specifications
+  for_each     = var.vm_specifications
   name         = "${each.key}-password"
   value        = random_password.alz_win[each.key].result
   key_vault_id = data.azurerm_key_vault.core_spoke_keyvault.id
@@ -116,7 +116,7 @@ resource "azurerm_network_interface" "alz_win" {
 
 # Using Windows Machine Resource
 resource "azurerm_windows_virtual_machine" "alz_win" {
-  for_each                   = local.vm_specifications
+  for_each                   = var.vm_specifications
   name                       = each.key
   location                   = data.azurerm_resource_group.alz_win.location
   resource_group_name        = data.azurerm_resource_group.alz_win.name
@@ -202,7 +202,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
 # Antivirus
 resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   depends_on                 = [time_sleep.wait_30_seconds_ama] # See README
-  for_each                   = { for k, v in local.vm_specifications : k => v if v.enable_av }
+  for_each                   = { for k, v in var.vm_specifications : k => v if v.enable_av }
   name                       = "IaaSAntimalware"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.Azure.Security"
@@ -219,7 +219,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
       time      = "120",
       scanType  = "Quick"
     },
-    Exclusions = lookup(local.vm_specifications[each.key], "antimalware_exclusions", {
+    Exclusions = lookup(var.vm_specifications[each.key], "antimalware_exclusions", {
       Extensions = ""
       Paths      = "C:\\Windows\\SoftwareDistribution\\Datastore;C:\\Windows\\SoftwareDistribution\\Datastore\\Logs;C:\\Windows\\Security\\Database"
       Processes  = "NTUser.dat*"
@@ -230,7 +230,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
 
 # Install Azure monitor agent and associate it to a data collection rule
 resource "azurerm_virtual_machine_extension" "alz_win_ama" {
-  for_each                   = { for k, v in local.vm_specifications : k => v if v.monitor }
+  for_each                   = { for k, v in var.vm_specifications : k => v if v.monitor }
   name                       = "AzureMonitorAgent"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.Azure.Monitor"
@@ -255,7 +255,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
 # This shouldn't have been required as this functionality is baked into the AMA installed above but it currently doesn't work...
 # Confirmed with MS this should be fixed when it comes into General Availability 
 resource "azurerm_virtual_machine_extension" "alz_win_mma" {
-  for_each                   = { for k, v in local.vm_specifications : k => v if v.monitor }
+  for_each                   = { for k, v in var.vm_specifications : k => v if v.monitor }
   depends_on                 = [time_sleep.wait_30_seconds_av] # See README
   name                       = "MicrosoftMonitoringAgent"
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
@@ -283,7 +283,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_mma" {
 
 # associate to a Data Collection Rule
 resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
-  for_each                = { for k, v in local.vm_specifications : k => v if v.monitor }
+  for_each                = { for k, v in var.vm_specifications : k => v if v.monitor }
   name                    = azurerm_windows_virtual_machine.alz_win[each.key].name
   target_resource_id      = azurerm_windows_virtual_machine.alz_win[each.key].id
   data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id

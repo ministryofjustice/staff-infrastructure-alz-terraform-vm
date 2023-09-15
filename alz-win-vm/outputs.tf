@@ -20,5 +20,5 @@ output "nics" {
 }
 
 output "debug_vm_specifications" {
-  value = local.vm_specifications
+  value = var.vm_specifications
 }
