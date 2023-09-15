@@ -22,7 +22,6 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_backup_protected_vm.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/backup_protected_vm) | resource |
 | [azurerm_key_vault_secret.alz_linux_passwords](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret) | resource |
 | [azurerm_linux_virtual_machine.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | resource |
 | [azurerm_managed_disk.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk) | resource |
@@ -33,7 +32,6 @@ No modules.
 | [azurerm_virtual_machine_extension.alz_linux_ama](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) | resource |
 | [random_password.alz_linux](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_string.alz_linux_identity](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [azurerm_backup_policy_vm.spoke_vm_backup_policy_1_yr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/backup_policy_vm) | data source |
 | [azurerm_key_vault.core_spoke_keyvault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) | data source |
 | [azurerm_monitor_data_collection_rule.azure_monitor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/monitor_data_collection_rule) | data source |
 | [azurerm_resource_group.alz_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
