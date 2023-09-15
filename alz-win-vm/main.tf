@@ -33,23 +33,6 @@ locals {
       }
     ]
   ])
-
-
-  # Set some defaults for our VM spec
-
-  # vm_specifications = defaults(var.vm_specifications, {
-  #   os_disk_type          = "Standard_LRS"
-  #   marketplace_image     = false
-  #   admin_user            = "azureuser"
-  #   license_type          = "None"
-  #   scheduled_shutdown    = false
-  #   monitor               = false
-  #   enable_av             = false
-  #   enable_host_enc       = false
-  #   provision_vm_agent    = true
-  #   patch_mode            = "AutomaticByPlatform"
-  #   patch_assessment_mode = "AutomaticByPlatform"
-  # })
 }
 
 # Create a managed identity - this is shared between all VM's created per module call

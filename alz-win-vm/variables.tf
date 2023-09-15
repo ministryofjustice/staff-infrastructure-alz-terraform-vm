@@ -3,6 +3,7 @@ variable "resource_group" {
   type        = string
 }
 
+# Set some optional defaults for our VM spec
 variable "vm_specifications" {
   description = "Configuration parameters for each Virtual Machine specified"
   type = map(object({
