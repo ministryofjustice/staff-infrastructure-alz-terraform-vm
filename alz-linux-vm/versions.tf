@@ -1,6 +1,6 @@
 terraform {
-  required_version = ">=1.2.6"
-  experiments      = [module_variable_optional_attrs]
+  required_version = ">=1.5.3"
+  # experiments      = [module_variable_optional_attrs]
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
