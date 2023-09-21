@@ -29,6 +29,7 @@ locals {
         size          = disk.size
         type          = disk.type
         create_option = disk.create_option
+        zone          = vm.zone
         tags          = vm.tags
       }
     ]
@@ -121,6 +122,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   location                   = data.azurerm_resource_group.alz_win.location
   resource_group_name        = data.azurerm_resource_group.alz_win.name
   size                       = each.value.vm_size
+  zone                       = each.value.zone
   admin_username             = each.value.admin_user
   admin_password             = random_password.alz_win[each.key].result
   computer_name              = each.key # remember this can only be 15 characters max
@@ -184,6 +186,7 @@ resource "azurerm_managed_disk" "alz_win" {
   storage_account_type = each.value.type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
+  zone                 = each.value.zone
   tags                 = each.value.tags
 }
 
