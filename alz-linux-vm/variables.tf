@@ -11,7 +11,7 @@ variable "vm_specifications" {
     vm_size               = string
     marketplace_image     = optional(bool, false)
     marketplace_plan      = optional(map(string))
-    zone                  = string
+    zone                  = optional(string)
     publisher             = string
     offer                 = string
     sku                   = string
