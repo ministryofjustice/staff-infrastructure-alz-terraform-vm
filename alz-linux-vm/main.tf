@@ -34,21 +34,6 @@ locals {
       }
     ]
   ])
-
-
-  # Set some defaults for our VM spec
-
-  vm_specifications = defaults(var.vm_specifications, {
-    marketplace_image     = false
-    os_disk_type          = "Standard_LRS"
-    admin_user            = "azureuser"
-    scheduled_shutdown    = false
-    monitor               = false
-    provision_vm_agent    = true
-    patch_mode            = "AutomaticByPlatform"
-    patch_assessment_mode = "AutomaticByPlatform"
-  })
-
 }
 
 resource "random_string" "alz_linux_identity" {
@@ -72,7 +57,7 @@ resource "azurerm_user_assigned_identity" "alz_linux" {
 
 # Generate a password for each VM, then push it to Keyvault
 resource "random_password" "alz_linux" {
-  for_each         = local.vm_specifications
+  for_each         = var.vm_specifications
   length           = 16
   min_numeric      = 1
   min_special      = 1
@@ -82,7 +67,7 @@ resource "random_password" "alz_linux" {
 }
 
 resource "azurerm_key_vault_secret" "alz_linux_passwords" {
-  for_each     = local.vm_specifications
+  for_each     = var.vm_specifications
   name         = "${each.key}-password"
   value        = random_password.alz_linux[each.key].result
   key_vault_id = data.azurerm_key_vault.core_spoke_keyvault.id
@@ -112,7 +97,7 @@ resource "azurerm_network_interface" "alz_linux" {
 
 # Using Linux Machine Resource
 resource "azurerm_linux_virtual_machine" "alz_linux" {
-  for_each                        = local.vm_specifications
+  for_each                        = var.vm_specifications
   name                            = each.key
   location                        = data.azurerm_resource_group.alz_linux.location
   resource_group_name             = data.azurerm_resource_group.alz_linux.name
@@ -198,7 +183,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
 
 # Install Azure monitor agent and associate it to a data collection rule
 resource "azurerm_virtual_machine_extension" "alz_linux_ama" {
-  for_each                   = { for k, v in local.vm_specifications : k => k if v.monitor }
+  for_each                   = { for k, v in var.vm_specifications : k => k if v.monitor }
   name                       = "AzureMonitorAgent"
   virtual_machine_id         = azurerm_linux_virtual_machine.alz_linux[each.key].id
   publisher                  = "Microsoft.Azure.Monitor"
@@ -219,7 +204,7 @@ resource "azurerm_virtual_machine_extension" "alz_linux_ama" {
 
 # associate to a Data Collection Rule
 resource "azurerm_monitor_data_collection_rule_association" "alz_linux" {
-  for_each                = { for k, v in local.vm_specifications : k => k if v.monitor }
+  for_each                = { for k, v in var.vm_specifications : k => k if v.monitor }
   name                    = azurerm_linux_virtual_machine.alz_linux[each.key].name
   target_resource_id      = azurerm_linux_virtual_machine.alz_linux[each.key].id
   data_collection_rule_id = data.azurerm_monitor_data_collection_rule.azure_monitor[0].id

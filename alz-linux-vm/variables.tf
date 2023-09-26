@@ -4,24 +4,25 @@ variable "resource_group" {
   type        = string
 }
 
+# Set some optional defaults for our VM spec
 variable "vm_specifications" {
   description = "Configuration parameters for each Virtual Machine specified"
   type = map(object({
     vm_size               = string
-    marketplace_image     = optional(bool)
+    marketplace_image     = optional(bool, false)
     marketplace_plan      = optional(map(string))
     zone                  = optional(string)
     publisher             = string
     offer                 = string
     sku                   = string
     version               = string
-    os_disk_type          = optional(string)
-    admin_user            = string
-    patch_mode            = optional(string)
-    patch_assessment_mode = optional(string)
-    provision_vm_agent    = optional(bool)
-    scheduled_shutdown    = optional(bool)
-    monitor               = optional(bool)
+    os_disk_type          = optional(string, "Standard_LRS")
+    admin_user            = optional(string, "azureuser")
+    patch_mode            = optional(string, "AutomaticByPlatform")
+    patch_assessment_mode = optional(string, "AutomaticByPlatform")
+    provision_vm_agent    = optional(bool, true)
+    scheduled_shutdown    = optional(bool, false)
+    monitor               = optional(bool, false)
     backup                = optional(bool)
     enable_host_enc       = optional(bool)
 
