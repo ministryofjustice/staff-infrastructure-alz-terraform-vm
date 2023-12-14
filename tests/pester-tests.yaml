@@ -102,7 +102,7 @@ stages:
       backendAzureRmContainerName: tfstatepullrequest
       backendAzureRmKey: "alz-vm-module-tests.terraform.tfstate"
       workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/vm-build"
-      yamlenv: "pr_exclusivelock"
+      yamlenv: "destroy_approval"
       applyTfChanges: true
       terraformVersion: 1.5.7
       dependsOn: [test]
@@ -120,7 +120,7 @@ stages:
       backendAzureRmContainerName: tfstatepullrequest
       backendAzureRmKey: "alz-vm-module-infra-tests.terraform.tfstate"
       workingDirectory: "$(System.DefaultWorkingDirectory)/staff-infrastructure-alz-terraform-vm/tests/terraform/infra-build"
-      yamlenv: "pr_exclusivelock"
+      yamlenv: "destroy_approval"
       applyTfChanges: true
       terraformVersion: 1.5.7
       dependsOn: [test, destroy_vms]
