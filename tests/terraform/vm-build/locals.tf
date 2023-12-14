@@ -57,20 +57,20 @@ locals {
 
   vm_specifications_linux = {
     vm-test-nix-01 = {
-      vm_size               = "Standard_D3_v2"
-      zone                  = "1"
-      publisher             = "Canonical"
-      offer                 = "UbuntuServer"
-      sku                   = "16.04-LTS"
-      version               = "latest"
-      admin_user            = "azureuser"
+      vm_size                                                = "Standard_D3_v2"
+      zone                                                   = "1"
+      publisher                                              = "Canonical"
+      offer                                                  = "UbuntuServer"
+      sku                                                    = "16.04-LTS"
+      version                                                = "latest"
+      admin_user                                             = "azureuser"
       bypass_platform_safety_checks_on_user_schedule_enabled = false
-      provision_vm_agent    = true
-      patch_mode            = "AutomaticByPlatform"
-      patch_assessment_mode = "AutomaticByPlatform"
-      scheduled_shutdown    = false
-      monitor               = false
-      backup                = false
+      provision_vm_agent                                     = true
+      patch_mode                                             = "AutomaticByPlatform"
+      patch_assessment_mode                                  = "AutomaticByPlatform"
+      scheduled_shutdown                                     = false
+      monitor                                                = false
+      backup                                                 = false
 
       network = {
         nic-mgmt = {
