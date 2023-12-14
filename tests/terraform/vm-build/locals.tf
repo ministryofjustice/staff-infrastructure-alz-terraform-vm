@@ -64,6 +64,7 @@ locals {
       sku                   = "16.04-LTS"
       version               = "latest"
       admin_user            = "azureuser"
+      bypass_platform_safety_checks_on_user_schedule_enabled = false
       provision_vm_agent    = true
       patch_mode            = "AutomaticByPlatform"
       patch_assessment_mode = "AutomaticByPlatform"
