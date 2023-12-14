@@ -108,6 +108,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   zone                       = each.value.zone
   admin_username             = each.value.admin_user
   admin_password             = random_password.alz_win[each.key].result
+  bypass_platform_safety_checks_on_user_schedule_enabled = each.value.bypass_platform_safety_checks_on_user_schedule_enabled
   computer_name              = each.key # remember this can only be 15 characters max
   encryption_at_host_enabled = each.value.enable_host_enc
   license_type               = each.value.license_type

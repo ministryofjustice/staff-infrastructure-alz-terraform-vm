@@ -18,6 +18,7 @@ variable "vm_specifications" {
     version               = string
     os_disk_type          = optional(string, "Standard_LRS")
     admin_user            = optional(string, "azureuser")
+    bypass_platform_safety_checks_on_user_schedule_enabled = optional(string, "false")
     patch_mode            = optional(string, "AutomaticByPlatform")
     patch_assessment_mode = optional(string, "AutomaticByPlatform")
     provision_vm_agent    = optional(bool, true)
