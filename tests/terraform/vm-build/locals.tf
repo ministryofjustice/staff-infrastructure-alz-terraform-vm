@@ -15,7 +15,7 @@ locals {
       scheduled_shutdown                                     = true
       monitor                                                = true
       enable_av                                              = true
-      #av_type_handler_version                                = "1.3"
+      av_type_handler_version                                = "1.3"
       backup                                                 = false
       antimalware_exclusions = {
         Extensions = ".jpeg"

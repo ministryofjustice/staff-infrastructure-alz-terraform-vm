@@ -196,7 +196,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   type                       = "IaaSAntimalware"
   type_handler_version       = each.value.av_type_handler_version
   tags                       = each.value.tags
-  auto_upgrade_minor_version = "true"
+  auto_upgrade_minor_version = true
   settings = jsonencode({
     AntimalwareEnabled        = true,
     RealtimeProtectionEnabled = true,
