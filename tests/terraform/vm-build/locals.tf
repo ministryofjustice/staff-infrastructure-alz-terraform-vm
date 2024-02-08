@@ -1,6 +1,6 @@
 locals {
   vm_specifications_win = {
-    vm-test-win-01 = {
+    vm-test-win-05 = {
       vm_size                                                = "Standard_D3_v2"
       zone                                                   = "1"
       publisher                                              = "MicrosoftWindowsServer"
@@ -15,6 +15,7 @@ locals {
       scheduled_shutdown                                     = true
       monitor                                                = true
       enable_av                                              = true
+      av_type_handler_version                                = "1.3"
       backup                                                 = false
       antimalware_exclusions = {
         Extensions = ".jpeg"

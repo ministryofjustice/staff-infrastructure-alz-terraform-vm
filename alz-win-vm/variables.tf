@@ -26,6 +26,7 @@ variable "vm_specifications" {
     backup                = optional(bool)
     enable_host_enc       = optional(bool, false)
     enable_av             = optional(bool, false)
+    av_type_handler_version  = optional(string, "1.7")
     license_type          = optional(string, "None")
     antimalware_exclusions = optional(object({
       Extensions = optional(string)

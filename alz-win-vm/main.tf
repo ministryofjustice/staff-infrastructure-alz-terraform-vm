@@ -194,7 +194,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
   publisher                  = "Microsoft.Azure.Security"
   type                       = "IaaSAntimalware"
-  type_handler_version       = "1.7"
+  type_handler_version       = each.value.av_type_handler_version
   tags                       = each.value.tags
   auto_upgrade_minor_version = "true"
   settings = jsonencode({
