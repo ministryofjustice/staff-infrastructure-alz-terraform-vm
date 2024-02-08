@@ -1,11 +1,11 @@
 locals {
   vm_specifications_win = {
-    vm-test-win-06 = {
-      vm_size                                                = "Standard_D3_v2"
+    vm-test-win-07 = {
+      vm_size                                                = "Standard_D2s_v3"
       zone                                                   = "1"
       publisher                                              = "MicrosoftWindowsServer"
       offer                                                  = "WindowsServer"
-      sku                                                    = "2016-Datacenter"
+      sku                                                    = "2019-Datacenter"
       version                                                = "latest"
       admin_user                                             = "azureuser"
       bypass_platform_safety_checks_on_user_schedule_enabled = true
@@ -15,7 +15,7 @@ locals {
       scheduled_shutdown                                     = true
       monitor                                                = true
       enable_av                                              = true
-      av_type_handler_version                                = "1.3"
+      #av_type_handler_version                                = "1.3"
       backup                                                 = false
       antimalware_exclusions = {
         Extensions = ".jpeg"
