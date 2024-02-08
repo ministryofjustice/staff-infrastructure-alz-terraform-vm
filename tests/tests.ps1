@@ -16,9 +16,9 @@ Describe 'ALZ VM Module validation' {
 
 
         # Windows
-        $vmWin = Get-AzVM -Name vm-test-win-01
+        $vmWin = Get-AzVM -Name vm-test-win-07
         $winNic = Get-AzNetworkInterface -ResourceID $vmWin.NetworkProfile.NetworkInterfaces.Id
-        $monitorStatus = (Get-AzVMExtension -VMName vm-test-win-01 -ResourceGroupName $resourceGroupName | Where-Object {$_.Name -eq "AzureMonitorAgent"}).ProvisioningState
+        $monitorStatus = (Get-AzVMExtension -VMName vm-test-win-07 -ResourceGroupName $resourceGroupName | Where-Object {$_.Name -eq "AzureMonitorAgent"}).ProvisioningState
     }   
 
     Context 'Linux VM Validation' {
@@ -28,9 +28,9 @@ Describe 'ALZ VM Module validation' {
     }
 
     Context 'Windows VM Validation' {
-        It "Windows VM exists with correct name" { $vmWin.Name | Should -Be "vm-test-win-01" }
+        It "Windows VM exists with correct name" { $vmWin.Name | Should -Be "vm-test-win-07" }
         It "Windows VM has correct IP address" { $winNic.IPConfigurations.PrivateIPAddress | Should -Be "192.168.99.5" }
-        It "Windows VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-win-01-password" }
+        It "Windows VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-win-07-password" }
         It "Windows VM has monitoring extension provisioned" { $monitorStatus | Should -Be "Succeeded" }
     }
 }
