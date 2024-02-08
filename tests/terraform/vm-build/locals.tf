@@ -16,7 +16,7 @@ locals {
       monitor                                                = true
       enable_av                                              = true
       #av_type_handler_version                                = "1.3"
-      backup                                                 = false
+      backup = false
       antimalware_exclusions = {
         Extensions = ".jpeg"
         Paths      = "C:\\Windows\\debug"
