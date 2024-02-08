@@ -1,6 +1,6 @@
 locals {
   vm_specifications_win = {
-    vm-test-win-05 = {
+    vm-test-win-06 = {
       vm_size                                                = "Standard_D3_v2"
       zone                                                   = "1"
       publisher                                              = "MicrosoftWindowsServer"

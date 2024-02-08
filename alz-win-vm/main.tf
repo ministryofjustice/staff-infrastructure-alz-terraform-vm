@@ -199,9 +199,9 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   auto_upgrade_minor_version = "true"
   settings = jsonencode({
     AntimalwareEnabled        = true,
-    RealtimeProtectionEnabled = "true",
+    RealtimeProtectionEnabled = true,
     ScheduledScanSettings = {
-      isEnabled = "true",
+      isEnabled = true,
       day       = "7",
       time      = "120",
       scanType  = "Quick"
