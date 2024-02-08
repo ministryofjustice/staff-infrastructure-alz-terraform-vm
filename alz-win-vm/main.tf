@@ -100,21 +100,21 @@ resource "azurerm_network_interface" "alz_win" {
 
 # Using Windows Machine Resource
 resource "azurerm_windows_virtual_machine" "alz_win" {
-  for_each                   = var.vm_specifications
-  name                       = each.key
-  location                   = data.azurerm_resource_group.alz_win.location
-  resource_group_name        = data.azurerm_resource_group.alz_win.name
-  size                       = each.value.vm_size
-  zone                       = each.value.zone
-  admin_username             = each.value.admin_user
-  admin_password             = random_password.alz_win[each.key].result
+  for_each                                               = var.vm_specifications
+  name                                                   = each.key
+  location                                               = data.azurerm_resource_group.alz_win.location
+  resource_group_name                                    = data.azurerm_resource_group.alz_win.name
+  size                                                   = each.value.vm_size
+  zone                                                   = each.value.zone
+  admin_username                                         = each.value.admin_user
+  admin_password                                         = random_password.alz_win[each.key].result
   bypass_platform_safety_checks_on_user_schedule_enabled = each.value.bypass_platform_safety_checks_on_user_schedule_enabled
-  computer_name              = each.key # remember this can only be 15 characters max
-  encryption_at_host_enabled = each.value.enable_host_enc
-  license_type               = each.value.license_type
-  patch_mode                 = each.value.patch_mode
-  patch_assessment_mode      = each.value.patch_assessment_mode
-  provision_vm_agent         = each.value.provision_vm_agent
+  computer_name                                          = each.key # remember this can only be 15 characters max
+  encryption_at_host_enabled                             = each.value.enable_host_enc
+  license_type                                           = each.value.license_type
+  patch_mode                                             = each.value.patch_mode
+  patch_assessment_mode                                  = each.value.patch_assessment_mode
+  provision_vm_agent                                     = each.value.provision_vm_agent
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
