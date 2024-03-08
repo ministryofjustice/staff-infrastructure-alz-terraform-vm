@@ -36,6 +36,16 @@ locals {
   ])
 }
 
+locals {
+  custom_data = <<CUSTOM_DATA
+#!/bin/bash
+sudo -i
+cat << EOF > /etc/customdata
+example data
+EOF
+CUSTOM_DATA
+}
+
 resource "random_string" "alz_linux_identity" {
   length      = 10
   special     = false
@@ -112,6 +122,7 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   patch_mode                                             = each.value.patch_mode
   patch_assessment_mode                                  = each.value.patch_assessment_mode
   provision_vm_agent                                     = each.value.provision_vm_agent
+  custom_data                                            = base64encode(local.custom_data)
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
