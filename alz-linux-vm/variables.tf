@@ -26,7 +26,7 @@ variable "vm_specifications" {
     monitor                                                = optional(bool, false)
     backup                                                 = optional(bool)
     enable_host_enc                                        = optional(bool)
-    custom_data                                            = optional(string)
+    custom_data                                            = optional(string, null)
 
     network = map(object({
       vnet                          = string

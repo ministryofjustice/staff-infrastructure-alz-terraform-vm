@@ -36,16 +36,6 @@ locals {
   ])
 }
 
-locals {
-  custom_data = <<CUSTOM_DATA
-#!/bin/bash
-sudo -i
-cat << EOF > /etc/customdata
-example data
-EOF
-CUSTOM_DATA
-}
-
 resource "random_string" "alz_linux_identity" {
   length      = 10
   special     = false
