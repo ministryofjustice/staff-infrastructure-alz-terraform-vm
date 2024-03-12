@@ -20,7 +20,7 @@ variable "vm_specifications" {
     admin_user                                             = optional(string, "azureuser")
     bypass_platform_safety_checks_on_user_schedule_enabled = optional(string, "false")
     patch_mode                                             = optional(string, "AutomaticByPlatform")
-    patch_assessment_mode                                  = optional(string, "AutomaticByPlatform")
+    patch_assessment_mode                                  = optional(string, "ImageDefault")
     provision_vm_agent                                     = optional(bool, true)
     scheduled_shutdown                                     = optional(bool, false)
     monitor                                                = optional(bool, false)
