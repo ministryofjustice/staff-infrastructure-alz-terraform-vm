@@ -26,7 +26,7 @@ variable "vm_specifications" {
     monitor                                                = optional(bool, false)
     backup                                                 = optional(bool)
     enable_host_enc                                        = optional(bool)
-    custom_data                                            = optional(string, "")
+    custom_data                                            = optional(string)
 
     network = map(object({
       vnet                          = string
@@ -97,3 +97,9 @@ variable "recovery_vault_resource_group" {
   type        = string
   default     = null
 }
+
+# variable "use_custom_data" {
+#   type = bool
+#   description = "Whether custom data should be used"
+#   default = false
+# }
