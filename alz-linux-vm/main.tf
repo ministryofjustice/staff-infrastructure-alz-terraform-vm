@@ -112,6 +112,7 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   patch_mode                                             = each.value.patch_mode
   patch_assessment_mode                                  = each.value.patch_assessment_mode
   provision_vm_agent                                     = each.value.provision_vm_agent
+  custom_data                                            = each.value.custom_data
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
