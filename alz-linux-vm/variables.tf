@@ -97,9 +97,3 @@ variable "recovery_vault_resource_group" {
   type        = string
   default     = null
 }
-
-# variable "use_custom_data" {
-#   type = bool
-#   description = "Whether custom data should be used"
-#   default = false
-# }
