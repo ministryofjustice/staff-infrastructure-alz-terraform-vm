@@ -44,7 +44,7 @@ locals {
         data2 = {
           size          = 25
           lun           = 11
-          type          = "Standard_ZRS"
+          type          = "Premium_ZRS"
           create_option = "Empty"
         }
       }
