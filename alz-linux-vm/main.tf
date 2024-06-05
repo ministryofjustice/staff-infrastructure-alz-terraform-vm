@@ -1,5 +1,12 @@
 
 locals {
+  
+  # Determine if any VM requires an availability set
+  requires_availability_set = length([
+    for vm in values(var.vm_specifications) : vm if vm.use_availability_set
+  ]) > 0
+
+  
   # Collate NIC info along with other parameters that allow the NICs to be linked to the VM that specified them  
   nic_config = flatten([
     for vm_key, vm in var.vm_specifications : [
@@ -30,6 +37,7 @@ locals {
         type          = disk.type
         create_option = disk.create_option
         zone          = vm.zone
+        use_availability_set = vm.use_availability_set
         tags          = vm.tags
       }
     ]
@@ -42,6 +50,7 @@ resource "random_string" "alz_linux_identity" {
   upper       = false
   min_numeric = 3
 }
+
 
 resource "azurerm_user_assigned_identity" "alz_linux" {
   location            = data.azurerm_resource_group.alz_linux.location
@@ -66,6 +75,11 @@ resource "random_password" "alz_linux" {
   override_special = "!#$%&?"
 }
 
+resource "random_string" "random_as_name" {
+  length  = 8
+  special = false
+  upper   = false
+}
 resource "azurerm_key_vault_secret" "alz_linux_passwords" {
   for_each     = var.vm_specifications
   name         = "${each.key}-password"
@@ -94,6 +108,16 @@ resource "azurerm_network_interface" "alz_linux" {
   }
 }
 
+# Use the local value to conditionally create the availability set:
+resource "azurerm_availability_set" "as_set" {
+  count                        = local.requires_availability_set ? 1 : 0
+  name                         = "avail-${random_string.random_as_name.result}"
+  location                     = data.azurerm_resource_group.alz_win.location
+  resource_group_name          = data.azurerm_resource_group.alz_win.name
+  managed                      = true
+  platform_fault_domain_count  = 2
+  platform_update_domain_count = 2
+}
 
 # Using Linux Machine Resource
 resource "azurerm_linux_virtual_machine" "alz_linux" {
@@ -102,7 +126,6 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   location                                               = data.azurerm_resource_group.alz_linux.location
   resource_group_name                                    = data.azurerm_resource_group.alz_linux.name
   size                                                   = each.value.vm_size
-  zone                                                   = each.value.zone
   admin_username                                         = each.value.admin_user
   disable_password_authentication                        = false
   admin_password                                         = random_password.alz_linux[each.key].result
@@ -113,6 +136,10 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   patch_assessment_mode                                  = each.value.patch_assessment_mode
   provision_vm_agent                                     = each.value.provision_vm_agent
   custom_data                                            = each.value.custom_data
+
+  # Either use AS set or use AV zone but not both together
+  availability_set_id = each.value.use_availability_set ? azurerm_availability_set.as_set[0].id : null
+  zone                = !each.value.use_availability_set && each.value.zone != null ? each.value.zone : null
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
@@ -169,7 +196,7 @@ resource "azurerm_managed_disk" "alz_linux" {
   storage_account_type = each.value.type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
-  zone                 = each.value.zone
+  zone = each.value.type != "Premium_ZRS" && !each.value.use_availability_set ? each.value.zone : null
   tags                 = each.value.tags
 }
 

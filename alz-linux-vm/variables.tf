@@ -12,6 +12,7 @@ variable "vm_specifications" {
     marketplace_image                                      = optional(bool, false)
     marketplace_plan                                       = optional(map(string))
     zone                                                   = optional(string)
+    use_availability_set = optional(bool, false)
     publisher                                              = string
     offer                                                  = string
     sku                                                    = string
@@ -41,7 +42,7 @@ variable "vm_specifications" {
     data_disks = map(object({
       size          = number
       lun           = number
-      type          = string
+      type = optional(string, "Standard_LRS") # Default to LRS
       create_option = string
     }))
     tags = map(string)
