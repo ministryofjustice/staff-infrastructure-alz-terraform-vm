@@ -1,5 +1,12 @@
 
 locals {
+  
+  # Determine if any VM requires an availability set
+  requires_availability_set = length([
+    for vm in values(var.vm_specifications) : vm if vm.use_availability_set
+  ]) > 0
+  
+  
   # Collate NIC info along with other parameters that allow the NICs to be linked to the VM that specified them  
   nic_config = flatten([
     for vm_key, vm in var.vm_specifications : [
@@ -69,6 +76,12 @@ resource "random_password" "alz_win" {
   override_special = "!#$%&?"
 }
 
+resource "random_string" "random_as_name" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 resource "azurerm_key_vault_secret" "alz_win_passwords" {
   for_each     = var.vm_specifications
   name         = "${each.key}-password"
@@ -97,6 +110,18 @@ resource "azurerm_network_interface" "alz_win" {
   }
 }
 
+# Use the local value to conditionally create the availability set:
+resource "azurerm_availability_set" "as_set" {
+  count                        = local.requires_availability_set ? 1 : 0
+  name                         = "as-${random_string.random_as_name[0].result}"
+  location                     = data.azurerm_resource_group.alz_win.location
+  resource_group_name          = data.azurerm_resource_group.alz_win.name
+  managed                      = true
+  platform_fault_domain_count  = 2
+  platform_update_domain_count = 2
+}
+
+
 
 # Using Windows Machine Resource
 resource "azurerm_windows_virtual_machine" "alz_win" {
@@ -105,7 +130,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   location                                               = data.azurerm_resource_group.alz_win.location
   resource_group_name                                    = data.azurerm_resource_group.alz_win.name
   size                                                   = each.value.vm_size
-  zone                                                   = each.value.zone
   admin_username                                         = each.value.admin_user
   admin_password                                         = random_password.alz_win[each.key].result
   bypass_platform_safety_checks_on_user_schedule_enabled = each.value.bypass_platform_safety_checks_on_user_schedule_enabled
@@ -115,6 +139,10 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   patch_mode                                             = each.value.patch_mode
   patch_assessment_mode                                  = each.value.patch_assessment_mode
   provision_vm_agent                                     = each.value.provision_vm_agent
+
+  # Either use AS set or use AV zone but not both together
+  availability_set_id = each.value.use_availability_set ? azurerm_availability_set.as_set[0].id : null
+  zone                = !each.value.use_availability_set && each.value.zone != null ? each.value.zone : null
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
   tags = merge(each.value.tags,
@@ -170,7 +198,12 @@ resource "azurerm_managed_disk" "alz_win" {
   storage_account_type = each.value.type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
-  zone                 = each.value.zone
+  dynamic "zone" {
+    for_each = each.value.type == "Standard_ZRS" || each.value.use_availability_set ? [] : [1]
+    content {
+      zone = each.value.zone
+    }
+  }
   tags                 = each.value.tags
 }
 

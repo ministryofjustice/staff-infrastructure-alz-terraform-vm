@@ -1,8 +1,8 @@
 locals {
   vm_specifications_win = {
-    vm-test-win-07 = {
+    vm-test-win-17 = {
       vm_size                                                = "Standard_D2s_v3"
-      zone                                                   = "1"
+      use_availability_set                                   = true
       publisher                                              = "MicrosoftWindowsServer"
       offer                                                  = "WindowsServer"
       sku                                                    = "2019-Datacenter"
@@ -38,13 +38,13 @@ locals {
         data1 = {
           size          = 20
           lun           = 10
-          type          = "Standard_LRS"
+          type          = "Standard_ZRS"
           create_option = "Empty"
         },
         data2 = {
           size          = 25
           lun           = 11
-          type          = "Standard_LRS"
+          type          = "Standard_ZRS"
           create_option = "Empty"
         }
       }
@@ -57,7 +57,7 @@ locals {
   }
 
   vm_specifications_linux = {
-    vm-test-nix-01 = {
+    vm-test-nix-11 = {
       vm_size                                                = "Standard_D3_v2"
       zone                                                   = "1"
       publisher                                              = "Canonical"
