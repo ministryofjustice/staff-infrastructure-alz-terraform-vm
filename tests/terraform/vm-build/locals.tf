@@ -38,7 +38,7 @@ locals {
         data1 = {
           size          = 20
           lun           = 10
-          type          = "Standard_LRS"
+          type          = "Premium_ZRS"
           create_option = "Empty"
         },
         data2 = {
@@ -46,6 +46,7 @@ locals {
           lun           = 11
           type          = "Standard_LRS"
           create_option = "Empty"
+          zone          = 1
         }
       }
 
@@ -58,7 +59,7 @@ locals {
 
   vm_specifications_linux = {
     vm-test-nix-01 = {
-      vm_size                                                = "Standard_D3_v2"
+      vm_size                                                = "Standard_D2s_v3"
       zone                                                   = "1"
       publisher                                              = "Canonical"
       offer                                                  = "UbuntuServer"
@@ -84,7 +85,20 @@ locals {
         }
       }
 
-      data_disks = {}
+      data_disks = {
+        data1 = {
+          size          = 20
+          lun           = 10
+          type          = "Premium_ZRS"
+          create_option = "Empty"
+        },
+        data2 = {
+          size          = 25
+          lun           = 11
+          type          = "Standard_LRS"
+          create_option = "Empty"
+          zone          = 1
+      } }
 
       tags = {
         application = "linux_app"
