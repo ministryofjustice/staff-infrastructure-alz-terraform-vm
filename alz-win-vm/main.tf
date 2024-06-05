@@ -141,7 +141,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   provision_vm_agent                                     = each.value.provision_vm_agent
 
   # Either use AS set or use AV zone but not both together
-  availability_set_id = each.value.use_availability_set ? azurerm_availability_set.as_set.id : null
+  availability_set_id = each.value.use_availability_set ? azurerm_availability_set.as_set[0].id : null
   zone                = !each.value.use_availability_set && each.value.zone != null ? each.value.zone : null
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
