@@ -179,8 +179,8 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   for_each           = { for disk in local.data_disk_config : "${disk.disk_name}-${disk.vm_name}" => disk }
   managed_disk_id    = azurerm_managed_disk.alz_win[each.key].id # lookup the correct managed disk ID's using the combo of disk name and vm name
   virtual_machine_id = azurerm_windows_virtual_machine.alz_win[each.value.vm_name].id
-  lun     = each.value.lun
-  caching = "ReadWrite"
+  lun                = each.value.lun
+  caching            = "ReadWrite"
 }
 
 # VM Extensions
