@@ -199,7 +199,7 @@ resource "azurerm_managed_disk" "alz_win" {
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
   zone                 = each.value.type != "Standard_ZRS" && !each.value.use_availability_set ? each.value.zone : null
-  tags = each.value.tags
+  tags                 = each.value.tags
 }
 
 # Match up the disks and corresponding VM's
