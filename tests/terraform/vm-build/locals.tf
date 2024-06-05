@@ -59,7 +59,7 @@ locals {
 
   vm_specifications_linux = {
     vm-test-nix-01 = {
-      vm_size                                                = "Standard_D3_v2"
+      vm_size                                                = "Standard_D2s_v3"
       zone                                                   = "1"
       publisher                                              = "Canonical"
       offer                                                  = "UbuntuServer"
