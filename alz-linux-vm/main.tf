@@ -1,12 +1,12 @@
 
 locals {
-  
+
   # Determine if any VM requires an availability set
   requires_availability_set = length([
     for vm in values(var.vm_specifications) : vm if vm.use_availability_set
   ]) > 0
 
-  
+
   # Collate NIC info along with other parameters that allow the NICs to be linked to the VM that specified them  
   nic_config = flatten([
     for vm_key, vm in var.vm_specifications : [
@@ -30,15 +30,15 @@ locals {
   data_disk_config = flatten([
     for vm_key, vm in var.vm_specifications : [
       for disk_key, disk in vm.data_disks : {
-        vm_name       = vm_key
-        disk_name     = disk_key
-        size          = disk.size
-        lun           = disk.lun
-        type          = disk.type
-        create_option = disk.create_option
-        zone          = vm.zone
+        vm_name              = vm_key
+        disk_name            = disk_key
+        size                 = disk.size
+        lun                  = disk.lun
+        type                 = disk.type
+        create_option        = disk.create_option
+        zone                 = vm.zone
         use_availability_set = vm.use_availability_set
-        tags          = vm.tags
+        tags                 = vm.tags
       }
     ]
   ])
@@ -196,7 +196,7 @@ resource "azurerm_managed_disk" "alz_linux" {
   storage_account_type = each.value.type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
-  zone = each.value.type != "Premium_ZRS" && !each.value.use_availability_set ? each.value.zone : null
+  zone                 = each.value.type != "Premium_ZRS" && !each.value.use_availability_set ? each.value.zone : null
   tags                 = each.value.tags
 }
 

@@ -145,6 +145,6 @@ locals {
         owner       = "alz"
       }
     }
-    
+
   }
 }
