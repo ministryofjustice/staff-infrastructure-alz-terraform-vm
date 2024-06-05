@@ -30,15 +30,15 @@ locals {
   data_disk_config = flatten([
     for vm_key, vm in var.vm_specifications : [
       for disk_key, disk in vm.data_disks : {
-        vm_name       = vm_key
-        disk_name     = disk_key
-        lun           = disk.lun
-        size          = disk.size
-        type          = disk.type
-        create_option = disk.create_option
-        zone          = vm.zone
+        vm_name              = vm_key
+        disk_name            = disk_key
+        lun                  = disk.lun
+        size                 = disk.size
+        type                 = disk.type
+        create_option        = disk.create_option
+        zone                 = vm.zone
         use_availability_set = vm.use_availability_set
-        tags          = vm.tags
+        tags                 = vm.tags
       }
     ]
   ])
