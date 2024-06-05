@@ -113,7 +113,7 @@ resource "azurerm_network_interface" "alz_win" {
 # Use the local value to conditionally create the availability set:
 resource "azurerm_availability_set" "as_set" {
   count                        = local.requires_availability_set ? 1 : 0
-  name                         = "as-${random_string.random_as_name[0].result}"
+  name                         = "as-${random_string.random_as_name.result}"
   location                     = data.azurerm_resource_group.alz_win.location
   resource_group_name          = data.azurerm_resource_group.alz_win.name
   managed                      = true
@@ -141,7 +141,7 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   provision_vm_agent                                     = each.value.provision_vm_agent
 
   # Either use AS set or use AV zone but not both together
-  availability_set_id = each.value.use_availability_set ? azurerm_availability_set.as_set[0].id : null
+  availability_set_id = each.value.use_availability_set ? azurerm_availability_set.as_set.id : null
   zone                = !each.value.use_availability_set && each.value.zone != null ? each.value.zone : null
 
   # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
