@@ -37,6 +37,7 @@ locals {
         type          = disk.type
         create_option = disk.create_option
         zone          = vm.zone
+        use_availability_set = vm.use_availability_set
         tags          = vm.tags
       }
     ]
