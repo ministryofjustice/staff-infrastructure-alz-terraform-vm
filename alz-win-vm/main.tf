@@ -198,12 +198,7 @@ resource "azurerm_managed_disk" "alz_win" {
   storage_account_type = each.value.type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
-  dynamic "zone" {
-    for_each = each.value.type == "Standard_ZRS" || each.value.use_availability_set ? [] : [1]
-    content {
-      zone = each.value.zone
-    }
-  }
+  zone                 = each.value.type != "Standard_ZRS" && !each.value.use_availability_set ? each.value.zone : null
   tags = each.value.tags
 }
 
