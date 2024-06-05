@@ -1,12 +1,12 @@
 
 locals {
-  
+
   # Determine if any VM requires an availability set
   requires_availability_set = length([
     for vm in values(var.vm_specifications) : vm if vm.use_availability_set
   ]) > 0
-  
-  
+
+
   # Collate NIC info along with other parameters that allow the NICs to be linked to the VM that specified them  
   nic_config = flatten([
     for vm_key, vm in var.vm_specifications : [
@@ -204,7 +204,7 @@ resource "azurerm_managed_disk" "alz_win" {
       zone = each.value.zone
     }
   }
-  tags                 = each.value.tags
+  tags = each.value.tags
 }
 
 # Match up the disks and corresponding VM's
