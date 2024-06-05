@@ -112,8 +112,8 @@ resource "azurerm_network_interface" "alz_linux" {
 resource "azurerm_availability_set" "as_set" {
   count                        = local.requires_availability_set ? 1 : 0
   name                         = "avail-${random_string.random_as_name.result}"
-  location                     = data.azurerm_resource_group.alz_win.location
-  resource_group_name          = data.azurerm_resource_group.alz_win.name
+  location                     = data.azurerm_resource_group.alz_linux.location
+  resource_group_name          = data.azurerm_resource_group.alz_linux.name
   managed                      = true
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
