@@ -43,6 +43,7 @@ variable "vm_specifications" {
       lun           = number
       type          = string
       create_option = string
+      zone          = optional(string)
     }))
     tags = map(string)
   }))

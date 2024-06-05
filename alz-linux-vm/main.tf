@@ -29,7 +29,7 @@ locals {
         lun           = disk.lun
         type          = disk.type
         create_option = disk.create_option
-        zone          = vm.zone
+        zone          = disk.zone
         tags          = vm.tags
       }
     ]

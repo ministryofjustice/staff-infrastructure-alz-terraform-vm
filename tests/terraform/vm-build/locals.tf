@@ -85,7 +85,20 @@ locals {
         }
       }
 
-      data_disks = {}
+      data_disks = {
+        data1 = {
+          size          = 20
+          lun           = 10
+          type          = "Premium_ZRS"
+          create_option = "Empty"
+        },
+        data2 = {
+          size          = 25
+          lun           = 11
+          type          = "Standard_LRS"
+          create_option = "Empty"
+          zone          = 1
+      } }
 
       tags = {
         application = "linux_app"
