@@ -22,7 +22,6 @@ module "linux_vm_tests" {
   keyvault_name                            = "kv-alz-vm-test-001"
   keyvault_rg                              = "rg-alz-vm-test-001"
   providers                                = { azurerm = azurerm.spoke }
-  ignore_disk_changes                      = false
 }
 
 module "windows_vm_tests" {

@@ -158,25 +158,16 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_win.id]
   }
-
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [1] : []
-    content {
-      ignore_changes = [
-        "os_disk[0].name",
-        "os_disk[0].disk_size_gb",
-        "os_disk[0].create_option",
-        "os_disk[0].id"
-      ]
-    }
+  
+  lifecycle {
+    ignore_changes = [
+      "os_disk.0.name",
+      "os_disk.0.disk_size_gb",
+      "os_disk.0.create_option",
+      "os_disk.0.id"
+    ]
   }
 
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [] : [1]
-    content {
-      ignore_changes = []
-    }
-  }
 }
 
 
@@ -191,39 +182,13 @@ resource "azurerm_managed_disk" "alz_win" {
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
   tags                 = each.value.tags
-
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [1] : []
-    content {
-      ignore_changes = [
-        "managed_disk_id",
-        "create_option"
-      ]
-    }
+  lifecycle {
+    ignore_changes = [
+      "managed_disk_id",
+      "create_option"
+    ]
   }
-
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [] : [1]
-    content {
-      ignore_changes = []
-    }
-  }
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [1] : []
-    content {
-      ignore_changes = [
-        "managed_disk_id",
-        "create_option"
-      ]
-    }
-  }
-
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [] : [1]
-    content {
-      ignore_changes = []
-    }
-  }
+  
 }
 
 # Match up the disks and corresponding VM's
@@ -233,21 +198,12 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   virtual_machine_id = azurerm_windows_virtual_machine.alz_win[each.value.vm_name].id
   lun                = each.value.lun
   caching            = "ReadWrite"
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [1] : []
-    content {
-      ignore_changes = [
-        "managed_disk_id",
-        "create_option"
-      ]
-    }
-  }
-
-  dynamic "lifecycle" {
-    for_each = var.ignore_disk_changes ? [] : [1]
-    content {
-      ignore_changes = []
-    }
+  
+  lifecycle {
+    ignore_changes = [
+      "managed_disk_id",
+      "create_option"
+    ]
   }
 }
 
