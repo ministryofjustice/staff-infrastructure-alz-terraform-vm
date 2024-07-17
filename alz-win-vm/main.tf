@@ -177,7 +177,7 @@ resource "azurerm_managed_disk" "alz_win" {
   zone                 = each.value.zone
   tags                 = each.value.tags
   lifecycle {
-    ignore_changes     = ["managed_disk_id", "create_option"]
+    ignore_changes = ["managed_disk_id", "create_option"]
   }
 }
 
@@ -189,7 +189,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   lun                = each.value.lun
   caching            = "ReadWrite"
   lifecycle {
-   ignore_changes = local.data_disk_ignore_changes
+    ignore_changes = local.data_disk_ignore_changes
   }
 }
 
