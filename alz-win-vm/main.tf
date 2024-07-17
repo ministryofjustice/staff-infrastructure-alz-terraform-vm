@@ -162,8 +162,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   lifecycle {
     ignore_changes = [
     "name",
-    "disk_size_gb",
-    "create_option",
     "id"
     ]
   }
@@ -184,7 +182,6 @@ resource "azurerm_managed_disk" "alz_win" {
   tags                 = each.value.tags
   lifecycle {
     ignore_changes = [
-      "managed_disk_id",
       "create_option"
     ]
   }
