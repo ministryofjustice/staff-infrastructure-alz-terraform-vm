@@ -22,7 +22,7 @@ module "linux_vm_tests" {
   keyvault_name                            = "kv-alz-vm-test-001"
   keyvault_rg                              = "rg-alz-vm-test-001"
   providers                                = { azurerm = azurerm.spoke }
-  ignore_disk_changes = var.ignore_disk_changes
+  ignore_disk_changes                      = false
 }
 
 module "windows_vm_tests" {
@@ -37,5 +37,4 @@ module "windows_vm_tests" {
   data_collection_rule_monitor_resource_group = "rg-alz-vm-test-001"
   log_analytics_workspace_name                = "log-alz-vm-test-001"
   providers                                   = { azurerm = azurerm.spoke }
-  ignore_disk_changes = var.ignore_disk_changes
 }
