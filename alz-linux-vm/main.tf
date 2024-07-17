@@ -167,7 +167,7 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     ]
   }
 
- 
+
 }
 
 
@@ -189,7 +189,7 @@ resource "azurerm_managed_disk" "alz_linux" {
       "create_option"
     ]
   }
-  
+
 }
 
 # Match up the disks and corresponding VM's
