@@ -104,3 +104,9 @@ variable "recovery_vault_resource_group" {
   type        = string
   default     = null
 }
+
+variable "ignore_disk_changes" {
+  description = "Flag to control ignoring changes to OS and data disks"
+  type        = bool
+  default     = true
+}

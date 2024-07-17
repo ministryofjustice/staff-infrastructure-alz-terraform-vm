@@ -9,3 +9,9 @@ variable "tenant_id" {
   description = "Tenant ID"
   default     = "0bb413d7-160d-4839-868a-f3d46537f6af" # dev
 }
+
+variable "ignore_disk_changes" {
+  description = "Flag to control ignoring changes to OS and data disks"
+  type        = bool
+  default     = true
+}
