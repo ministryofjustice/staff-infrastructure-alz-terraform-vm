@@ -191,8 +191,22 @@ resource "azurerm_managed_disk" "alz_win" {
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
   tags                 = each.value.tags
-  lifecycle {
-    ignore_changes     = ["managed_disk_id", "create_option"]
+
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [1] : []
+    content {
+      ignore_changes = [
+        "managed_disk_id",
+        "create_option"
+      ]
+    }
+  }
+
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [] : [1]
+    content {
+      ignore_changes = []
+    }
   }
   dynamic "lifecycle" {
     for_each = var.ignore_disk_changes ? [1] : []
