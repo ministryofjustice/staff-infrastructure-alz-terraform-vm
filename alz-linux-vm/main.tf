@@ -158,8 +158,23 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     identity_ids = [azurerm_user_assigned_identity.alz_linux.id]
   }
 
-  lifecycle {
-    ignore_changes = local.os_disk_ignore_changes
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [1] : []
+    content {
+      ignore_changes = [
+        "os_disk[0].name",
+        "os_disk[0].disk_size_gb",
+        "os_disk[0].create_option",
+        "os_disk[0].id"
+      ]
+    }
+  }
+
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [] : [1]
+    content {
+      ignore_changes = []
+    }
   }
 }
 
@@ -175,9 +190,21 @@ resource "azurerm_managed_disk" "alz_linux" {
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
   tags                 = each.value.tags
-  lifecycle {
-    ignore_changes     = ["managed_disk_id", "create_option"]
-                        
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [1] : []
+    content {
+      ignore_changes = [
+        "managed_disk_id",
+        "create_option"
+      ]
+    }
+  }
+
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [] : [1]
+    content {
+      ignore_changes = []
+    }
   }
 }
 
@@ -189,8 +216,21 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
   lun     = each.value.lun
   caching = "ReadWrite"
-  lifecycle {
-   ignore_changes = local.data_disk_ignore_changes
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [1] : []
+    content {
+      ignore_changes = [
+        "managed_disk_id",
+        "create_option"
+      ]
+    }
+  }
+
+  dynamic "lifecycle" {
+    for_each = var.ignore_disk_changes ? [] : [1]
+    content {
+      ignore_changes = []
+    }
   }
 }
 
