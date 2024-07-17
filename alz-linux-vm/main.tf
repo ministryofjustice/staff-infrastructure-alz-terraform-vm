@@ -160,10 +160,10 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
 
   lifecycle {
     ignore_changes = [
-    "name",
-    "disk_size_gb",
-    "create_option",
-    "id"
+      "name",
+      "disk_size_gb",
+      "create_option",
+      "id"
     ]
   }
 
