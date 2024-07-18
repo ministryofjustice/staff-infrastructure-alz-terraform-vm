@@ -158,15 +158,6 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     identity_ids = [azurerm_user_assigned_identity.alz_linux.id]
   }
 
-  lifecycle {
-    ignore_changes = [
-      "name",
-      "id",
-      "create_option"
-    ]
-  }
-
-
 }
 
 
@@ -184,7 +175,8 @@ resource "azurerm_managed_disk" "alz_linux" {
 
   lifecycle {
     ignore_changes = [
-      "create_option"
+      create_option,
+      source_resource_id
     ]
   }
 
@@ -201,8 +193,8 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
 
   lifecycle {
     ignore_changes = [
-      "managed_disk_id",
-      "create_option"
+      id,
+      managed_disk_id
     ]
   }
 
