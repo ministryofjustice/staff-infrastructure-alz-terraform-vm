@@ -162,7 +162,8 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   lifecycle {
     ignore_changes = [
       "name",
-      "id"
+      "id",
+      "create_option"
     ]
   }
 
