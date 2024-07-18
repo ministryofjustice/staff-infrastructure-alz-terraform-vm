@@ -11,26 +11,26 @@ Describe 'ALZ VM Module validation' {
         $kvSecrets = (Get-AzKeyVaultSecret -VaultName "kv-alz-vm-test-001").Name
         
         # Linux 
-        $vmLinux = Get-AzVM -Name vm-test-nix-01
+        $vmLinux = Get-AzVM -Name vm-test-nix-011
         $linuxNic = Get-AzNetworkInterface -ResourceID $vmLinux.NetworkProfile.NetworkInterfaces.Id
 
 
         # Windows
-        $vmWin = Get-AzVM -Name vm-test-win-07
+        $vmWin = Get-AzVM -Name vm-test-win-007
         $winNic = Get-AzNetworkInterface -ResourceID $vmWin.NetworkProfile.NetworkInterfaces.Id
-        $monitorStatus = (Get-AzVMExtension -VMName vm-test-win-07 -ResourceGroupName $resourceGroupName | Where-Object {$_.Name -eq "AzureMonitorAgent"}).ProvisioningState
+        $monitorStatus = (Get-AzVMExtension -VMName vm-test-win-007 -ResourceGroupName $resourceGroupName | Where-Object {$_.Name -eq "AzureMonitorAgent"}).ProvisioningState
     }   
 
     Context 'Linux VM Validation' {
-        It "Linux VM exists with correct name" { $vmLinux.Name | Should -Be "vm-test-nix-01" }
-        It "Linux VM has correct IP address" { $linuxNic.IPConfigurations.PrivateIPAddress | Should -Be "192.168.99.6" }
-        It "Linux VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-nix-01-password" }
+        It "Linux VM exists with correct name" { $vmLinux.Name | Should -Be "vm-test-nix-011" }
+        It "Linux VM has correct IP address" { $linuxNic.IPConfigurations.PrivateIPAddress | Should -Be "192.168.99.66" }
+        It "Linux VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-nix-011-password" }
     }
 
     Context 'Windows VM Validation' {
-        It "Windows VM exists with correct name" { $vmWin.Name | Should -Be "vm-test-win-07" }
-        It "Windows VM has correct IP address" { $winNic.IPConfigurations.PrivateIPAddress | Should -Be "192.168.99.5" }
-        It "Windows VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-win-07-password" }
+        It "Windows VM exists with correct name" { $vmWin.Name | Should -Be "vm-test-win-007" }
+        It "Windows VM has correct IP address" { $winNic.IPConfigurations.PrivateIPAddress | Should -Be "192.168.99.55" }
+        It "Windows VM has created credentials in Keyvault" { $kvSecrets | Should -Contain "vm-test-win-007-password" }
         It "Windows VM has monitoring extension provisioned" { $monitorStatus | Should -Be "Succeeded" }
     }
 }
