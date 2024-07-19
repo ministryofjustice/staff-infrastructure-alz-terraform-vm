@@ -1,6 +1,6 @@
 locals {
   vm_specifications_win = {
-    vm-test-win-07 = {
+    vm-test-win-007 = {
       vm_size                                                = "Standard_D2s_v3"
       zone                                                   = "1"
       publisher                                              = "MicrosoftWindowsServer"
@@ -28,7 +28,7 @@ locals {
           vnet                          = "vnet-alz-vm-test-001"
           vnet_resource_group           = "rg-alz-vm-test-001"
           subnet                        = "snet-alz-vm-test-001"
-          ip_address                    = "192.168.99.5"
+          ip_address                    = "192.168.99.55"
           enable_accelerated_networking = true
           enable_ip_forwarding          = true
         }
@@ -58,7 +58,7 @@ locals {
   }
 
   vm_specifications_linux = {
-    vm-test-nix-01 = {
+    vm-test-nix-011 = {
       vm_size                                                = "Standard_D2s_v3"
       zone                                                   = "1"
       publisher                                              = "Canonical"
@@ -79,7 +79,7 @@ locals {
           vnet                          = "vnet-alz-vm-test-001"
           vnet_resource_group           = "rg-alz-vm-test-001"
           subnet                        = "snet-alz-vm-test-001"
-          ip_address                    = "192.168.99.6"
+          ip_address                    = "192.168.99.66"
           enable_accelerated_networking = true
           enable_ip_forwarding          = true
         }

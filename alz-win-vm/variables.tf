@@ -104,3 +104,4 @@ variable "recovery_vault_resource_group" {
   type        = string
   default     = null
 }
+

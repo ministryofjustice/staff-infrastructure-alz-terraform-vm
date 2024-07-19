@@ -157,6 +157,7 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_linux.id]
   }
+
 }
 
 
@@ -171,6 +172,14 @@ resource "azurerm_managed_disk" "alz_linux" {
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
   tags                 = each.value.tags
+
+  lifecycle {
+    ignore_changes = [
+      create_option,
+      source_resource_id
+    ]
+  }
+
 }
 
 # Match up the disks and corresponding VM's
@@ -181,6 +190,14 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   # lun                = (index(local.data_disk_config, each.value) + 10) # LUNS will be incremental numbers starting from 10
   lun     = each.value.lun
   caching = "ReadWrite"
+
+  lifecycle {
+    ignore_changes = [
+      id,
+      managed_disk_id
+    ]
+  }
+
 }
 
 # Install Azure monitor agent and associate it to a data collection rule
