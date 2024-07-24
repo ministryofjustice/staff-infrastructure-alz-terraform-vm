@@ -85,8 +85,7 @@ resource "azurerm_network_interface" "alz_win" {
   resource_group_name           = data.azurerm_resource_group.alz_win.name
   tags                          = each.value.tags
   dns_servers                   = each.value.dns_servers
-  enable_accelerated_networking = each.value.enable_accelerated_networking
-  enable_ip_forwarding          = each.value.enable_ip_forwarding
+
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"
@@ -249,37 +248,6 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
       }
     }
     SETTINGS
-}
-
-# Also install "old" Log Analytics agent (extension called MicrosoftMonitoringAgent...) required to collect Change Tracking info
-# This ultimately allows collection of data on Files, Services and Registry key changes so alerts can be created based on this
-# This shouldn't have been required as this functionality is baked into the AMA installed above but it currently doesn't work...
-# Confirmed with MS this should be fixed when it comes into General Availability 
-resource "azurerm_virtual_machine_extension" "alz_win_mma" {
-  for_each                   = { for k, v in var.vm_specifications : k => v if v.monitor }
-  depends_on                 = [time_sleep.wait_30_seconds_av] # See README
-  name                       = "MicrosoftMonitoringAgent"
-  virtual_machine_id         = azurerm_windows_virtual_machine.alz_win[each.key].id
-  publisher                  = "Microsoft.EnterpriseCloud.Monitoring"
-  type                       = "MicrosoftMonitoringAgent"
-  type_handler_version       = "1.0"
-  auto_upgrade_minor_version = true
-
-  settings = <<-BASE_SETTINGS
-  {
-    "azureResourceId" : "${azurerm_windows_virtual_machine.alz_win[each.key].id}",
-    "stopOnMultipleConnections" : true,
-    "workspaceId" : "${data.azurerm_log_analytics_workspace.core_spoke[0].workspace_id}"
-  }
-  BASE_SETTINGS
-
-  protected_settings = <<-PROTECTED_SETTINGS
-  {
-    "workspaceKey" : "${data.azurerm_log_analytics_workspace.core_spoke[0].primary_shared_key}"
-  }
-  PROTECTED_SETTINGS
-
-  tags = each.value.tags
 }
 
 # associate to a Data Collection Rule

@@ -82,8 +82,6 @@ resource "azurerm_network_interface" "alz_linux" {
   resource_group_name           = data.azurerm_resource_group.alz_linux.name
   tags                          = each.value.tags
   dns_servers                   = each.value.dns_servers
-  enable_accelerated_networking = each.value.enable_accelerated_networking
-  enable_ip_forwarding          = each.value.enable_ip_forwarding
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"
