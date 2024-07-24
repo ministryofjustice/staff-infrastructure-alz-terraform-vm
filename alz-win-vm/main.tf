@@ -250,11 +250,12 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
     }
     SETTINGS
 }
+/*
 
 # Also install "old" Log Analytics agent (extension called MicrosoftMonitoringAgent...) required to collect Change Tracking info
 # This ultimately allows collection of data on Files, Services and Registry key changes so alerts can be created based on this
 # This shouldn't have been required as this functionality is baked into the AMA installed above but it currently doesn't work...
-# Confirmed with MS this should be fixed when it comes into General Availability 
+# Confirmed with MS this should be fixed when it comes into General Availability (24/07/2024 AMA can now collect change tracking info)
 resource "azurerm_virtual_machine_extension" "alz_win_mma" {
   for_each                   = { for k, v in var.vm_specifications : k => v if v.monitor }
   depends_on                 = [time_sleep.wait_30_seconds_av] # See README
@@ -281,6 +282,7 @@ resource "azurerm_virtual_machine_extension" "alz_win_mma" {
 
   tags = each.value.tags
 }
+*/
 
 # associate to a Data Collection Rule
 resource "azurerm_monitor_data_collection_rule_association" "alz_win" {
