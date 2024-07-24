@@ -251,7 +251,6 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
     SETTINGS
 }
 /*
-
 # Also install "old" Log Analytics agent (extension called MicrosoftMonitoringAgent...) required to collect Change Tracking info
 # This ultimately allows collection of data on Files, Services and Registry key changes so alerts can be created based on this
 # This shouldn't have been required as this functionality is baked into the AMA installed above but it currently doesn't work...
