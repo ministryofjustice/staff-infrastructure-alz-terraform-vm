@@ -80,11 +80,11 @@ resource "azurerm_network_interface" "alz_win" {
   for_each = {
     for nic in local.nic_config : "${nic.nic}.${nic.vm_name}" => nic
   }
-  name                          = each.key
-  location                      = data.azurerm_resource_group.alz_win.location
-  resource_group_name           = data.azurerm_resource_group.alz_win.name
-  tags                          = each.value.tags
-  dns_servers                   = each.value.dns_servers
+  name                = each.key
+  location            = data.azurerm_resource_group.alz_win.location
+  resource_group_name = data.azurerm_resource_group.alz_win.name
+  tags                = each.value.tags
+  dns_servers         = each.value.dns_servers
 
 
   ip_configuration {
