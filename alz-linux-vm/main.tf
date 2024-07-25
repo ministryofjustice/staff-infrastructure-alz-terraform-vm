@@ -77,11 +77,11 @@ resource "azurerm_network_interface" "alz_linux" {
   for_each = {
     for nic in local.nic_config : "${nic.nic}-${nic.vm_name}" => nic
   }
-  name                          = each.key
-  location                      = data.azurerm_resource_group.alz_linux.location
-  resource_group_name           = data.azurerm_resource_group.alz_linux.name
-  tags                          = each.value.tags
-  dns_servers                   = each.value.dns_servers
+  name                = each.key
+  location            = data.azurerm_resource_group.alz_linux.location
+  resource_group_name = data.azurerm_resource_group.alz_linux.name
+  tags                = each.value.tags
+  dns_servers         = each.value.dns_servers
   enable_accelerated_networking = each.value.enable_accelerated_networking
   enable_ip_forwarding          = each.value.enable_ip_forwarding
 
