@@ -85,12 +85,6 @@ resource "azurerm_network_interface" "alz_win" {
   resource_group_name = data.azurerm_resource_group.alz_win.name
   tags                = each.value.tags
   dns_servers         = each.value.dns_servers
-
-  name                          = each.key
-  location                      = data.azurerm_resource_group.alz_win.location
-  resource_group_name           = data.azurerm_resource_group.alz_win.name
-  tags                          = each.value.tags
-  dns_servers                   = each.value.dns_servers
   enable_accelerated_networking = each.value.enable_accelerated_networking
   enable_ip_forwarding          = each.value.enable_ip_forwarding
 
