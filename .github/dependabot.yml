@@ -9,19 +9,18 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-  
+
   - package-ecosystem: "terraform"
-    directory: "/tests/terraform/infra-build"
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-    open-pull-requests-limit: 5
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-  
-  - package-ecosystem: "terraform"
-    directory: "/tests/terraform/vm-build"
+    directories:
+      - "/tests/terraform/*"
+    groups:
+      vm-module-tests:
+        applies-to: version-updates
+        patterns:
+        - "*"
+        update-types:
+        - "minor"
+        - "patch"
     schedule:
       interval: "weekly"
       day: "sunday"
