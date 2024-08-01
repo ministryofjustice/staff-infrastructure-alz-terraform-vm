@@ -1,7 +1,7 @@
 # To get started with Dependabot version updates, you'll need to specify which
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
@@ -9,13 +9,23 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-
+  
   - package-ecosystem: "terraform"
-    directory: "/tests/terraform/infra-build", "/tests/terraform/vm-build"
+    directory: "/tests/terraform/infra-build"
     schedule:
       interval: "weekly"
       day: "sunday"
-    open-pull-requests-limit: 5 # default, let's see how we go
+    open-pull-requests-limit: 5
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"] # let's have more control over major changes
+        update-types: ["version-update:semver-major"]
+  
+  - package-ecosystem: "terraform"
+    directory: "/tests/terraform/vm-build"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
