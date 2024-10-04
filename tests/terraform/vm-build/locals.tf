@@ -24,10 +24,10 @@ locals {
 
       network = {
         nic-mgmt = {
-          vnet                          = "vnet-alz-vm-test-001"
-          vnet_resource_group           = "rg-alz-vm-test-001"
-          subnet                        = "snet-alz-vm-test-001"
-          ip_address                    = "192.168.99.55"
+          vnet                           = "vnet-alz-vm-test-001"
+          vnet_resource_group            = "rg-alz-vm-test-001"
+          subnet                         = "snet-alz-vm-test-001"
+          ip_address                     = "192.168.99.55"
           accelerated_networking_enabled = true
           ip_forwarding_enabled          = true
         }
@@ -70,10 +70,10 @@ locals {
 
       network = {
         nic-mgmt = {
-          vnet                          = "vnet-alz-vm-test-001"
-          vnet_resource_group           = "rg-alz-vm-test-001"
-          subnet                        = "snet-alz-vm-test-001"
-          ip_address                    = "192.168.99.66"
+          vnet                           = "vnet-alz-vm-test-001"
+          vnet_resource_group            = "rg-alz-vm-test-001"
+          subnet                         = "snet-alz-vm-test-001"
+          ip_address                     = "192.168.99.66"
           accelerated_networking_enabled = true
           ip_forwarding_enabled          = true
         }

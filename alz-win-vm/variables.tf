@@ -34,12 +34,12 @@ variable "vm_specifications" {
     }))
 
     network = map(object({
-      vnet                          = string
-      vnet_resource_group           = string
-      subnet                        = string
-      ip_address                    = string
-      public_ip_id                  = optional(string)
-      custom_dns_servers            = optional(list(string))
+      vnet                           = string
+      vnet_resource_group            = string
+      subnet                         = string
+      ip_address                     = string
+      public_ip_id                   = optional(string)
+      custom_dns_servers             = optional(list(string))
       accelerated_networking_enabled = optional(bool)
       ip_forwarding_enabled          = optional(bool)
     }))

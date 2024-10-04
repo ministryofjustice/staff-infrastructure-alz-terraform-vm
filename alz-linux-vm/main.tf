@@ -4,14 +4,14 @@ locals {
   nic_config = flatten([
     for vm_key, vm in var.vm_specifications : [
       for nic_key, nic in vm.network : {
-        vm_name                       = vm_key
-        nic                           = nic_key
-        vnet                          = nic.vnet
-        subnet                        = nic.subnet
-        ip                            = nic.ip_address
-        pip_id                        = nic.public_ip_id
-        dns_servers                   = nic.custom_dns_servers
-        vnet_rg                       = nic.vnet_resource_group
+        vm_name                        = vm_key
+        nic                            = nic_key
+        vnet                           = nic.vnet
+        subnet                         = nic.subnet
+        ip                             = nic.ip_address
+        pip_id                         = nic.public_ip_id
+        dns_servers                    = nic.custom_dns_servers
+        vnet_rg                        = nic.vnet_resource_group
         accelerated_networking_enabled = coalesce(nic.accelerated_networking_enabled, false) # Set the default value to false
         ip_forwarding_enabled          = coalesce(nic.ip_forwarding_enabled, false)
       }
@@ -75,10 +75,10 @@ resource "azurerm_network_interface" "alz_linux" {
   for_each = {
     for nic in local.nic_config : "${nic.nic}-${nic.vm_name}" => nic
   }
-  name                          = each.key
-  location                      = data.azurerm_resource_group.alz_linux.location
-  resource_group_name           = data.azurerm_resource_group.alz_linux.name
-  dns_servers                   = each.value.dns_servers
+  name                           = each.key
+  location                       = data.azurerm_resource_group.alz_linux.location
+  resource_group_name            = data.azurerm_resource_group.alz_linux.name
+  dns_servers                    = each.value.dns_servers
   accelerated_networking_enabled = each.value.accelerated_networking_enabled
   ip_forwarding_enabled          = each.value.ip_forwarding_enabled
 
@@ -89,7 +89,7 @@ resource "azurerm_network_interface" "alz_linux" {
     private_ip_address            = each.value.ip
     public_ip_address_id          = each.value.pip_id
   }
-    lifecycle {
+  lifecycle {
     ignore_changes = [
       tags,
     ]
@@ -176,7 +176,7 @@ resource "azurerm_managed_disk" "alz_linux" {
   lifecycle {
     ignore_changes = [
       create_option,
-      source_resource_id,tags,
+      source_resource_id, tags,
     ]
   }
 
@@ -194,7 +194,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   lifecycle {
     ignore_changes = [
       id,
-      managed_disk_id,tags,
+      managed_disk_id, tags,
     ]
   }
 
