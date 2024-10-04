@@ -12,9 +12,9 @@ locals {
         pip_id                        = nic.public_ip_id
         dns_servers                   = nic.custom_dns_servers
         vnet_rg                       = nic.vnet_resource_group
-        enable_accelerated_networking = coalesce(nic.enable_accelerated_networking, false) # Set the default value to false
-        enable_ip_forwarding          = coalesce(nic.enable_ip_forwarding, false)
-        tags                          = vm.tags
+        accelerated_networking_enabled = coalesce(nic.accelerated_networking_enabled, false) # Set the default value to false
+        ip_forwarding_enabled          = coalesce(nic.ip_forwarding_enabled, false)
+
       }
     ]
   ])
@@ -30,7 +30,7 @@ locals {
         type          = disk.type
         create_option = disk.create_option
         zone          = disk.zone
-        tags          = vm.tags
+
       }
     ]
   ])
@@ -83,10 +83,9 @@ resource "azurerm_network_interface" "alz_win" {
   name                          = each.key
   location                      = data.azurerm_resource_group.alz_win.location
   resource_group_name           = data.azurerm_resource_group.alz_win.name
-  tags                          = each.value.tags
   dns_servers                   = each.value.dns_servers
-  enable_accelerated_networking = each.value.enable_accelerated_networking
-  enable_ip_forwarding          = each.value.enable_ip_forwarding
+  accelerated_networking_enabled = each.value.accelerated_networking_enabled
+  ip_forwarding_enabled          = each.value.ip_forwarding_enabled
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"
@@ -94,6 +93,11 @@ resource "azurerm_network_interface" "alz_win" {
     private_ip_address_allocation = "Static"
     private_ip_address            = each.value.ip
     public_ip_address_id          = each.value.pip_id
+  }
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
   }
 }
 
@@ -115,12 +119,6 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
   patch_mode                                             = each.value.patch_mode
   patch_assessment_mode                                  = each.value.patch_assessment_mode
   provision_vm_agent                                     = each.value.provision_vm_agent
-
-  # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
-  tags = merge(each.value.tags,
-    {
-      "scheduled_shutdown" = each.value.scheduled_shutdown ? "true" : "false"
-  })
 
   os_disk {
     name                 = "osDisk-${each.key}"
@@ -158,7 +156,11 @@ resource "azurerm_windows_virtual_machine" "alz_win" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_win.id]
   }
-
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 
@@ -172,11 +174,11 @@ resource "azurerm_managed_disk" "alz_win" {
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
-  tags                 = each.value.tags
+
   lifecycle {
     ignore_changes = [
       create_option,
-      source_resource_id
+      source_resource_id,tags,
     ]
   }
 
@@ -193,7 +195,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   lifecycle {
     ignore_changes = [
       id,
-      managed_disk_id
+      managed_disk_id,tags,
     ]
   }
 }
@@ -209,7 +211,6 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
   publisher                  = "Microsoft.Azure.Security"
   type                       = "IaaSAntimalware"
   type_handler_version       = each.value.av_type_handler_version
-  tags                       = each.value.tags
   auto_upgrade_minor_version = true
   settings = jsonencode({
     AntimalwareEnabled        = true,
@@ -238,7 +239,6 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
   type                       = "AzureMonitorWindowsAgent"
   type_handler_version       = "1.9"
   auto_upgrade_minor_version = true
-  tags                       = each.value.tags
   settings                   = <<SETTINGS
     {
       "authentication": {
@@ -249,6 +249,11 @@ resource "azurerm_virtual_machine_extension" "alz_win_ama" {
       }
     }
     SETTINGS
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 # associate to a Data Collection Rule

@@ -12,9 +12,8 @@ locals {
         pip_id                        = nic.public_ip_id
         dns_servers                   = nic.custom_dns_servers
         vnet_rg                       = nic.vnet_resource_group
-        enable_accelerated_networking = coalesce(nic.enable_accelerated_networking, false) # Set the default value to false
-        enable_ip_forwarding          = coalesce(nic.enable_ip_forwarding, false)
-        tags                          = vm.tags
+        accelerated_networking_enabled = coalesce(nic.accelerated_networking_enabled, false) # Set the default value to false
+        ip_forwarding_enabled          = coalesce(nic.ip_forwarding_enabled, false)
       }
     ]
   ])
@@ -30,7 +29,6 @@ locals {
         type          = disk.type
         create_option = disk.create_option
         zone          = disk.zone
-        tags          = vm.tags
       }
     ]
   ])
@@ -80,10 +78,9 @@ resource "azurerm_network_interface" "alz_linux" {
   name                          = each.key
   location                      = data.azurerm_resource_group.alz_linux.location
   resource_group_name           = data.azurerm_resource_group.alz_linux.name
-  tags                          = each.value.tags
   dns_servers                   = each.value.dns_servers
-  enable_accelerated_networking = each.value.enable_accelerated_networking
-  enable_ip_forwarding          = each.value.enable_ip_forwarding
+  accelerated_networking_enabled = each.value.accelerated_networking_enabled
+  ip_forwarding_enabled          = each.value.ip_forwarding_enabled
 
   ip_configuration {
     name                          = "ipconfig-${each.value.nic}"
@@ -91,6 +88,11 @@ resource "azurerm_network_interface" "alz_linux" {
     private_ip_address_allocation = "Static"
     private_ip_address            = each.value.ip
     public_ip_address_id          = each.value.pip_id
+  }
+    lifecycle {
+    ignore_changes = [
+      tags,
+    ]
   }
 }
 
@@ -114,12 +116,6 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
   provision_vm_agent                                     = each.value.provision_vm_agent
   custom_data                                            = each.value.custom_data
 
-  # Work out the functional tags based on the bools passed and combine those with the static tags specified for the VM
-  tags = merge(each.value.tags,
-    {
-      "prometheusAzureVirtualMachines" = each.value.monitor ? "tomonitor" : "notmonitored"
-      "scheduled_shutdown"             = each.value.scheduled_shutdown ? "true" : "false"
-  })
 
   os_disk {
     name                 = "osDisk-${each.key}"
@@ -157,7 +153,11 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.alz_linux.id]
   }
-
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 
@@ -176,7 +176,7 @@ resource "azurerm_managed_disk" "alz_linux" {
   lifecycle {
     ignore_changes = [
       create_option,
-      source_resource_id
+      source_resource_id,tags,
     ]
   }
 
@@ -194,7 +194,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   lifecycle {
     ignore_changes = [
       id,
-      managed_disk_id
+      managed_disk_id,tags,
     ]
   }
 
