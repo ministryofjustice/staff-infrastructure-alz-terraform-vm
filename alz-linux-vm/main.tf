@@ -171,7 +171,6 @@ resource "azurerm_managed_disk" "alz_linux" {
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
-  tags                 = each.value.tags
 
   lifecycle {
     ignore_changes = [
