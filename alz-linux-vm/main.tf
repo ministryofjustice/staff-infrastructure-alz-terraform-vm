@@ -194,7 +194,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   lifecycle {
     ignore_changes = [
       id,
-      managed_disk_id, tags,
+      managed_disk_id
     ]
   }
 
