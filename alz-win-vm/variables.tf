@@ -21,7 +21,6 @@ variable "vm_specifications" {
     patch_mode                                             = optional(string, "AutomaticByPlatform")
     patch_assessment_mode                                  = optional(string, "AutomaticByPlatform")
     provision_vm_agent                                     = optional(bool, true)
-    scheduled_shutdown                                     = optional(bool, false)
     monitor                                                = optional(bool, false)
     backup                                                 = optional(bool)
     enable_host_enc                                        = optional(bool, false)
@@ -35,14 +34,14 @@ variable "vm_specifications" {
     }))
 
     network = map(object({
-      vnet                          = string
-      vnet_resource_group           = string
-      subnet                        = string
-      ip_address                    = string
-      public_ip_id                  = optional(string)
-      custom_dns_servers            = optional(list(string))
-      enable_accelerated_networking = optional(bool)
-      enable_ip_forwarding          = optional(bool)
+      vnet                           = string
+      vnet_resource_group            = string
+      subnet                         = string
+      ip_address                     = string
+      public_ip_id                   = optional(string)
+      custom_dns_servers             = optional(list(string))
+      accelerated_networking_enabled = optional(bool)
+      ip_forwarding_enabled          = optional(bool)
     }))
     data_disks = map(object({
       size          = number
@@ -51,7 +50,6 @@ variable "vm_specifications" {
       create_option = string
       zone          = optional(string)
     }))
-    tags = map(string)
   }))
 }
 

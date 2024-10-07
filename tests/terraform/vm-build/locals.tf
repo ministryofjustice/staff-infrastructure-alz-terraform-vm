@@ -12,9 +12,8 @@ locals {
       provision_vm_agent                                     = true
       patch_mode                                             = "AutomaticByPlatform"
       patch_assessment_mode                                  = "AutomaticByPlatform"
-      scheduled_shutdown                                     = true
       monitor                                                = true
-      enable_av                                              = true
+      enable_av                                              = false
       av_type_handler_version                                = "1.3"
       backup                                                 = false
       antimalware_exclusions = {
@@ -25,12 +24,12 @@ locals {
 
       network = {
         nic-mgmt = {
-          vnet                          = "vnet-alz-vm-test-001"
-          vnet_resource_group           = "rg-alz-vm-test-001"
-          subnet                        = "snet-alz-vm-test-001"
-          ip_address                    = "192.168.99.55"
-          enable_accelerated_networking = true
-          enable_ip_forwarding          = true
+          vnet                           = "vnet-alz-vm-test-001"
+          vnet_resource_group            = "rg-alz-vm-test-001"
+          subnet                         = "snet-alz-vm-test-001"
+          ip_address                     = "192.168.99.55"
+          accelerated_networking_enabled = true
+          ip_forwarding_enabled          = true
         }
       }
 
@@ -50,10 +49,6 @@ locals {
         }
       }
 
-      tags = {
-        application = "windows_app"
-        owner       = "alz"
-      }
     }
   }
 
@@ -70,18 +65,17 @@ locals {
       provision_vm_agent                                     = true
       patch_mode                                             = "AutomaticByPlatform"
       patch_assessment_mode                                  = "AutomaticByPlatform"
-      scheduled_shutdown                                     = false
       monitor                                                = false
       backup                                                 = false
 
       network = {
         nic-mgmt = {
-          vnet                          = "vnet-alz-vm-test-001"
-          vnet_resource_group           = "rg-alz-vm-test-001"
-          subnet                        = "snet-alz-vm-test-001"
-          ip_address                    = "192.168.99.66"
-          enable_accelerated_networking = true
-          enable_ip_forwarding          = true
+          vnet                           = "vnet-alz-vm-test-001"
+          vnet_resource_group            = "rg-alz-vm-test-001"
+          subnet                         = "snet-alz-vm-test-001"
+          ip_address                     = "192.168.99.66"
+          accelerated_networking_enabled = true
+          ip_forwarding_enabled          = true
         }
       }
 
@@ -100,10 +94,6 @@ locals {
           zone          = 1
       } }
 
-      tags = {
-        application = "linux_app"
-        owner       = "alz"
-      }
     }
   }
 }

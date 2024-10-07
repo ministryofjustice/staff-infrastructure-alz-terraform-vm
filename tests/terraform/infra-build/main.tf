@@ -78,7 +78,7 @@ resource "azurerm_storage_account" "vm_module_tests" {
   account_tier                    = "Standard"
   account_kind                    = "StorageV2"
   account_replication_type        = "LRS"
-  enable_https_traffic_only       = true
+  https_traffic_only_enabled      = true
   allow_nested_items_to_be_public = false
   provider                        = azurerm.spoke
 }
@@ -87,7 +87,7 @@ resource "azurerm_log_analytics_workspace" "vm_module_tests" {
   name                = "log-alz-vm-test-001"
   location            = azurerm_resource_group.vm_module_tests.location
   resource_group_name = azurerm_resource_group.vm_module_tests.name
-  sku                 = "PerGB2018" 
+  sku                 = "PerGB2018"
   retention_in_days   = 30
   daily_quota_gb      = 10
   provider            = azurerm.spoke
@@ -108,10 +108,10 @@ resource "azurerm_monitor_data_collection_rule" "vm_module_tests" {
 
   data_sources {
     performance_counter {
-      counter_specifiers = ["\\VmInsights\\DetailedMetrics"]
-      name = "VMInsightsPerfCounters"
+      counter_specifiers            = ["\\VmInsights\\DetailedMetrics"]
+      name                          = "VMInsightsPerfCounters"
       sampling_frequency_in_seconds = 60
-      streams = ["Microsoft-InsightsMetrics"]
+      streams                       = ["Microsoft-InsightsMetrics"]
     }
   }
 
