@@ -13,7 +13,7 @@ locals {
       patch_mode                                             = "AutomaticByPlatform"
       patch_assessment_mode                                  = "AutomaticByPlatform"
       monitor                                                = true
-      enable_av                                              = true
+      enable_av                                              = false
       av_type_handler_version                                = "1.3"
       backup                                                 = false
       antimalware_exclusions = {
