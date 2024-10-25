@@ -2,10 +2,8 @@ name: TF Static Analysis
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Triggers the workflow on pull request events but only for the main branch
   pull_request:
-    branches: [ main ]
-  push:
     branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -46,7 +44,7 @@ jobs:
         fetch-depth: 0
 
     - name: Run Analysis
-      uses: ministryofjustice/github-actions/terraform-static-analysis@v14
+      uses: ministryofjustice/github-actions/terraform-static-analysis@v18.4.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
