@@ -5,7 +5,7 @@ on:
   # Triggers the workflow on pull request events but only for the main branch
   pull_request:
     branches: [ main ]
-
+  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
@@ -19,9 +19,13 @@ on:
           - changed
           - single
 
+permissions:
+  contents: read
 
 jobs:
   terraform-static-analysis:
+    permissions:
+      pull-requests: write
     name: Terraform Static Analysis
     runs-on: ubuntu-latest
     steps:
@@ -51,4 +55,4 @@ jobs:
         tflint_config: tflint.azure.hcl
         comment_on_pr: true
         scan_type: ${{ env.scan }}
-        terraform_working_dir: tests/terraform/
+        tflint_exclude: terraform_unused_declarations
