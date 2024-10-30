@@ -43,12 +43,12 @@ jobs:
         echo "scan=$scan_type_default" >> $GITHUB_ENV
 
     - name: Checkout
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         fetch-depth: 0
 
     - name: Run Analysis
-      uses: ministryofjustice/github-actions/terraform-static-analysis@v18.5.0
+      uses: ministryofjustice/github-actions/terraform-static-analysis@ccf9e3a4a828df1ec741f6c8e6ed9d0acaef3490 # v18.5.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
