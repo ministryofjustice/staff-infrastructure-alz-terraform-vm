@@ -228,6 +228,12 @@ resource "azurerm_virtual_machine_extension" "alz_win_antivirus" {
     })
   })
 
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
+
 }
 
 # Install Azure monitor agent and associate it to a data collection rule

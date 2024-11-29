@@ -218,6 +218,11 @@ resource "azurerm_virtual_machine_extension" "alz_linux_ama" {
       }
     }
     SETTINGS
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 # associate to a Data Collection Rule
