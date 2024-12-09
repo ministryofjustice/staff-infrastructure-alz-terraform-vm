@@ -30,7 +30,7 @@ resource "azurerm_virtual_network" "vm_module_tests" {
   provider            = azurerm.spoke
 
   subnet {
-    name           = "snet-alz-vm-test-001"
+    name             = "snet-alz-vm-test-001"
     address_prefixes = ["192.168.99.0/24"]
   }
 }
