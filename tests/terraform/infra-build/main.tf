@@ -31,7 +31,7 @@ resource "azurerm_virtual_network" "vm_module_tests" {
 
   subnet {
     name           = "snet-alz-vm-test-001"
-    address_prefix = "192.168.99.0/24"
+    address_prefixes = ["192.168.99.0/24"]
   }
 }
 
