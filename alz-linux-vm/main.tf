@@ -121,6 +121,7 @@ resource "azurerm_linux_virtual_machine" "alz_linux" {
     name                 = "osDisk-${each.key}"
     caching              = "ReadWrite"
     storage_account_type = each.value.os_disk_type
+    disk_size_gb         = each.value.os_disk_size
   }
 
   boot_diagnostics {
