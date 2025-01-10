@@ -16,6 +16,7 @@ variable "vm_specifications" {
     offer                                                  = string
     sku                                                    = string
     version                                                = string
+    os_disk_size                                           = optional(number)
     os_disk_type                                           = optional(string, "Standard_LRS")
     admin_user                                             = optional(string, "azureuser")
     bypass_platform_safety_checks_on_user_schedule_enabled = optional(string, "false")
