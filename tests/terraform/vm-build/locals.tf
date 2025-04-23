@@ -39,12 +39,14 @@ locals {
           lun           = 10
           type          = "Premium_LRS"
           create_option = "Empty"
+          zone = 1
         },
         data2 = {
           size          = 25
           lun           = 11
           type          = "Premium_LRS"
           create_option = "Empty"
+          zone = 1
         }
       }
 
@@ -84,12 +86,14 @@ locals {
           lun           = 10
           type          = "Premium_LRS"
           create_option = "Empty"
+          zone = 1
         },
         data2 = {
           size          = 25
           lun           = 11
           type          = "Premium_LRS"
           create_option = "Empty"
+          zone = 1
       } }
 
     }
