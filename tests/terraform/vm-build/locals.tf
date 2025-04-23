@@ -45,7 +45,6 @@ locals {
           lun           = 11
           type          = "Standard_LRS"
           create_option = "Empty"
-          zone          = 1
         }
       }
 
@@ -91,7 +90,6 @@ locals {
           lun           = 11
           type          = "Standard_LRS"
           create_option = "Empty"
-          zone          = 1
       } }
 
     }
