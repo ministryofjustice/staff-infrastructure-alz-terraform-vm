@@ -39,7 +39,7 @@ locals {
           lun           = 10
           type          = "Premium_LRS"
           create_option = "Empty"
-          zone = 1
+          zone          = 1
         },
         # data2 = {
         #   size          = 25
@@ -86,7 +86,7 @@ locals {
           lun           = 10
           type          = "Premium_LRS"
           create_option = "Empty"
-          zone = 1
+          zone          = 1
         },
         # data2 = {
         #   size          = 25
@@ -95,7 +95,7 @@ locals {
         #   create_option = "Empty"
         #   zone = 1
         # }
-       }
+      }
 
     }
   }
