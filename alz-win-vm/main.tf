@@ -175,6 +175,8 @@ resource "azurerm_managed_disk" "alz_win" {
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
+  disk_iops_read_write = null
+  disk_mbps_read_write = null
   lifecycle {
     ignore_changes = [
       create_option,
