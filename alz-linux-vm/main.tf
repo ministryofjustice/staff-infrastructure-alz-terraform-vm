@@ -183,6 +183,7 @@ resource "azurerm_managed_disk" "alz_linux" {
 
 }
 
+
 # Match up the disks and corresponding VM's
 resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
   for_each           = { for disk in local.data_disk_config : "${disk.disk_name}-${disk.vm_name}" => disk }
@@ -198,7 +199,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
       managed_disk_id
     ]
   }
-
+  depends_on = [azurerm_managed_disk.alz_linux]
 }
 
 # Install Azure monitor agent and associate it to a data collection rule

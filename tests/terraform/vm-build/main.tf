@@ -9,6 +9,7 @@ provider "random" {}
 
 provider "azurerm" {
   features {}
+  subscription_id = "c5551d23-f465-4e90-9f4d-ef19eecff6a0"
 }
 
 data "azurerm_client_config" "vm_module_tests" {}

@@ -186,6 +186,7 @@ resource "azurerm_managed_disk" "alz_win" {
 
 }
 
+
 # Match up the disks and corresponding VM's
 resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
   for_each           = { for disk in local.data_disk_config : "${disk.disk_name}-${disk.vm_name}" => disk }
@@ -200,6 +201,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_win" {
       managed_disk_id
     ]
   }
+  depends_on = [azurerm_managed_disk.alz_win]
 }
 
 # VM Extensions
