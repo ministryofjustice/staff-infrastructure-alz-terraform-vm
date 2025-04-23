@@ -41,13 +41,13 @@ locals {
           create_option = "Empty"
           zone = 1
         },
-        data2 = {
-          size          = 25
-          lun           = 11
-          type          = "Premium_LRS"
-          create_option = "Empty"
-          zone = 1
-        }
+        # data2 = {
+        #   size          = 25
+        #   lun           = 11
+        #   type          = "Premium_LRS"
+        #   create_option = "Empty"
+        #   zone = 1
+        # }
       }
 
     }
@@ -88,13 +88,14 @@ locals {
           create_option = "Empty"
           zone = 1
         },
-        data2 = {
-          size          = 25
-          lun           = 11
-          type          = "Premium_LRS"
-          create_option = "Empty"
-          zone = 1
-      } }
+        # data2 = {
+        #   size          = 25
+        #   lun           = 11
+        #   type          = "Premium_LRS"
+        #   create_option = "Empty"
+        #   zone = 1
+        # }
+       }
 
     }
   }
