@@ -37,13 +37,13 @@ locals {
         data1 = {
           size          = 20
           lun           = 10
-          type          = "Premium_ZRS"
+          type          = "Premium_LRS"
           create_option = "Empty"
         },
         data2 = {
           size          = 25
           lun           = 11
-          type          = "Premium_ZRS"
+          type          = "Premium_LRS"
           create_option = "Empty"
         }
       }
@@ -82,13 +82,13 @@ locals {
         data1 = {
           size          = 20
           lun           = 10
-          type          = "Premium_ZRS"
+          type          = "Premium_LRS"
           create_option = "Empty"
         },
         data2 = {
           size          = 25
           lun           = 11
-          type          = "Premium_ZRS"
+          type          = "Premium_LRS"
           create_option = "Empty"
       } }
 
