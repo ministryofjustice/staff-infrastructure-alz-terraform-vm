@@ -172,7 +172,8 @@ resource "azurerm_managed_disk" "alz_linux" {
   create_option        = each.value.create_option
   disk_size_gb         = each.value.size
   zone                 = each.value.zone
-
+  disk_iops_read_write = null
+  disk_mbps_read_write = null
   lifecycle {
     ignore_changes = [
       create_option,
@@ -181,6 +182,7 @@ resource "azurerm_managed_disk" "alz_linux" {
   }
 
 }
+
 
 # Match up the disks and corresponding VM's
 resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
@@ -197,7 +199,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "alz_linux" {
       managed_disk_id
     ]
   }
-
+  depends_on = [azurerm_managed_disk.alz_linux]
 }
 
 # Install Azure monitor agent and associate it to a data collection rule

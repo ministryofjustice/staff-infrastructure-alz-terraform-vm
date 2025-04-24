@@ -37,16 +37,17 @@ locals {
         data1 = {
           size          = 20
           lun           = 10
-          type          = "Premium_ZRS"
-          create_option = "Empty"
-        },
-        data2 = {
-          size          = 25
-          lun           = 11
-          type          = "Standard_LRS"
+          type          = "Premium_LRS"
           create_option = "Empty"
           zone          = 1
-        }
+        },
+        # data2 = {
+        #   size          = 25
+        #   lun           = 11
+        #   type          = "Premium_LRS"
+        #   create_option = "Empty"
+        #   zone = 1
+        # }
       }
 
     }
@@ -83,16 +84,18 @@ locals {
         data1 = {
           size          = 20
           lun           = 10
-          type          = "Premium_ZRS"
-          create_option = "Empty"
-        },
-        data2 = {
-          size          = 25
-          lun           = 11
-          type          = "Standard_LRS"
+          type          = "Premium_LRS"
           create_option = "Empty"
           zone          = 1
-      } }
+        },
+        # data2 = {
+        #   size          = 25
+        #   lun           = 11
+        #   type          = "Premium_LRS"
+        #   create_option = "Empty"
+        #   zone = 1
+        # }
+      }
 
     }
   }
